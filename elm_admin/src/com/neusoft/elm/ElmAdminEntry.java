@@ -4,7 +4,9 @@ import java.util.Scanner;
 
 import com.neusoft.elm.po.Admin;
 import com.neusoft.elm.view.AdminView;
+import com.neusoft.elm.view.BusinessView;
 import com.neusoft.elm.view.impl.AdminViewImpl;
+import com.neusoft.elm.view.impl.BusinessViewImpl;
 
 public class ElmAdminEntry {
 	public void work() {
@@ -15,6 +17,7 @@ public class ElmAdminEntry {
 		System.out.println("---------------------------------------------------------");
 		
 		AdminView adminView = new AdminViewImpl();
+		BusinessView businessView = new BusinessViewImpl();
 		Admin admin = adminView.login();
 		
 		// 登录
@@ -27,16 +30,16 @@ public class ElmAdminEntry {
 				menu = input.nextInt();
 				switch(menu) {
 					case 1:
-//						businessView.listBusinessAll();
+						businessView.listBusinessAll();
 						break;
 					case 2:
-//						businessView.listBusiness();
+						businessView.listBusiness();
 						break;
 					case 3:
-//						businessView.saveBusiness();
+						businessView.saveBusiness();
 						break;
 					case 4:
-//						businessView.removeBusiness();
+						businessView.removeBusiness();
 						break;
 					case 5:
 						System.out.println("------------------------欢迎下次光临饿了么后台管理系统----------------------");

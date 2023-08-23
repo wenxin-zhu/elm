@@ -5,7 +5,10 @@ import java.util.List;
 import com.neusoft.elm.po.Business;
 
 public interface BusinessDao {
-	// 全查询商家表
-	public List<Business> listBusiness();
-//	public List<Business> listBusiness(String businessName,String businessAddress);
+	
+	public List<Business> listBusiness(String businessName,String businessAddress);
+	// 添加商家，返回新添加的商家编号
+	public int saveBusiness(String businessName);
+	// 删除商家，返回受影响的行数
+	public int removeBusiness(int businessId);
 }
