@@ -9,7 +9,12 @@ import com.neusoft.elm.dao.AdminDao;
 import com.neusoft.elm.po.Admin;
 import com.neusoft.elm.util.DBUtil;
 
-public class AdminDaoImpl implements AdminDao {
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+
+public class AdminDaoImpl implements AdminDao{
 	
 	private Connection con = null;
 	private PreparedStatement pst = null;
