@@ -41,17 +41,19 @@ public class BusinessDaoImpl implements BusinessDao {
 			rs = pst.executeQuery();
 			while(rs.next()) {
 				Business business = new Business();
-	@Override
-	public List<Business> listBusiness() {
-			List<Business> list = new ArrayList();
-			String sql = "select * from business order by businessId";
-		
-			try {
-				con = DBUtil.getConnection();
-				pst = con.prepareStatement(sql);
-				rs = pst.executeQuery();
-				while(rs.next()) {
-					Business business = new Business();
+//	@Override
+	
+	
+//	public List<Business> listBusiness() {
+//			List<Business> list = new ArrayList();
+//			String sql = "select * from business order by businessId";
+//		
+//			try {
+//				con = DBUtil.getConnection();
+//				pst = con.prepareStatement(sql);
+//				rs = pst.executeQuery();
+//				while(rs.next()) {
+//					Business business = new Business();
 					business.setBusinessId(rs.getInt("businessId"));
 					business.setPassword(rs.getString("password"));
 					business.setBusinessName(rs.getString("businessName"));
@@ -65,7 +67,7 @@ public class BusinessDaoImpl implements BusinessDao {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
-				DBUtil.closeConnection(rs, pst, con);
+				DBUtil.close(rs, pst, con);
 			}
 		return list;
 	}
@@ -91,16 +93,18 @@ public class BusinessDaoImpl implements BusinessDao {
 				business.setBusinessExplain(rs.getString("businessExplain"));
 				business.setStarPrice(rs.getDouble("starPrice"));
 				business.setDeliveryPrice(rs.getDouble("deliveryPrice"));
-				list.add(business);
+//				list.add(business);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, pst, con);
 		}
-		return list;
+//		return list;
+		return business;
 	}
-	// 插入商家
+	
+	// 添加商家
 	@Override
 	public int saveBusiness(String businessName) {
 	int businessId = 0;
@@ -160,18 +164,6 @@ public class BusinessDaoImpl implements BusinessDao {
 	return result;
 	}
 	
-	
-}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			DBUtil.closeConnection(rs, pst, con);
-		}
-		return business;
-	}
-
 	@Override
 	public Business getBusinessById(Integer businessId) {
 		Business business = null;
@@ -197,7 +189,7 @@ public class BusinessDaoImpl implements BusinessDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			DBUtil.closeConnection(rs, pst, con);
+			DBUtil.close(rs, pst, con);
 		}
 		
 		return business;
@@ -222,7 +214,7 @@ public class BusinessDaoImpl implements BusinessDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			DBUtil.closeConnection(null, pst, con);
+			DBUtil.close(null, pst, con);
 		}
 		
 		return result;
@@ -242,7 +234,7 @@ public class BusinessDaoImpl implements BusinessDao {
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
-			DBUtil.closeConnection(null, pst, con);
+			DBUtil.close(null, pst, con);
 		}
 		
 		return result;

@@ -40,7 +40,7 @@ public class FoodDaoImpl implements FoodDao{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			DBUtil.closeConnection(rs, pst, con);
+			DBUtil.close(rs, pst, con);
 		}
 		
 		return list;
@@ -63,7 +63,7 @@ public class FoodDaoImpl implements FoodDao{
 			// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally {
-				DBUtil.closeConnection(null, pst, con);
+				DBUtil.close(null, pst, con);
 		}
 		
 		return result;
@@ -89,7 +89,7 @@ public class FoodDaoImpl implements FoodDao{
 		 } catch (SQLException e) {
 			 e.printStackTrace();
 		 } finally {
-			 DBUtil.closeConnection(rs, pst, con);
+			 DBUtil.close(rs, pst, con);
 		 }
 		 return food;
 	}
@@ -109,7 +109,7 @@ public class FoodDaoImpl implements FoodDao{
 		 } catch (SQLException e) {
 			 e.printStackTrace();
 		 } finally {
-			 DBUtil.closeConnection(null, pst, con);
+			 DBUtil.close(null, pst, con);
 		 }
 		 return result;
 	}
@@ -126,7 +126,7 @@ public class FoodDaoImpl implements FoodDao{
 			 } catch (SQLException e) {
 			 e.printStackTrace();
 			 } finally {
-			 DBUtil.closeConnection(null, pst, con);
+			 DBUtil.close(null, pst, con);
 			 }
 		return result;
 	}
