@@ -1,12 +1,12 @@
 package com.neusoft.elm.po;
 
 public class User {
-	
+
 	private String userId;
 	private String password;
 	private String userName;
 	private Integer userSex;
-	private String userImp;
+	private String userImg;
 	private Integer delTag;
 	
 	public String getUserId() {
@@ -33,11 +33,11 @@ public class User {
 	public void setUserSex(Integer userSex) {
 		this.userSex = userSex;
 	}
-	public String getUserImp() {
-		return userImp;
+	public String getUserImg() {
+		return userImg;
 	}
-	public void setUserImp(String userImp) {
-		this.userImp = userImp;
+	public void setUserImg(String userImg) {
+		this.userImg = userImg;
 	}
 	public Integer getDelTag() {
 		return delTag;
