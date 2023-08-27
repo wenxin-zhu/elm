@@ -12,12 +12,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
-//public class DispatcherServlet extends HttpServlet {
-//
-//}
 /**
 * 自定义前端控制器 拦截url格式要求： /控制器类名/控制器方法名
 */
+
 // 拦截所有请求，但不包括静态资源
 @WebServlet("/") 
 public class DispatcherServlet extends HttpServlet {
