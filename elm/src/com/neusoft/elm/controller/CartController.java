@@ -14,7 +14,6 @@ public class CartController {
 		cart.setFoodId(Integer.valueOf(request.getParameter("foodId")));
 		cart.setBusinessId(Integer.valueOf(request.getParameter("businessId")));
 		cart.setUserId(request.getParameter("userId"));
-		System.out.println(request.getParameter("userId"));
 		CartService service = new CartServiceImpl();
 		int result = service.saveCart(cart);
 		return result;

@@ -25,4 +25,5 @@ public class DeliveryAddressServiceImpl implements DeliveryAddressService{
 		}
 		return list;
 	}
+	
 }

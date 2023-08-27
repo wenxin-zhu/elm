@@ -26,7 +26,6 @@ public class CartDaoImpl implements CartDao{
 			pst.setInt(1, cart.getFoodId());
 			pst.setInt(2, cart.getBusinessId());
 			pst.setString(3, cart.getUserId());
-			System.out.println(cart.getUserId());
 			result = pst.executeUpdate();
 		} finally {
 			DBUtil.close(pst);
