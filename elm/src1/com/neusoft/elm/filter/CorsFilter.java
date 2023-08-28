@@ -30,7 +30,7 @@ public class CorsFilter implements Filter{
 		response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Authorization"); 
 		filterChain.doFilter(servletRequest, servletResponse); 
 	} 
-  
+ 
 	@Override
 	public void destroy() { }
 }
