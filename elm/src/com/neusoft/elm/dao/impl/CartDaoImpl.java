@@ -13,9 +13,12 @@ import com.neusoft.elm.po.Food;
 import com.neusoft.elm.util.DBUtil;
 
 public class CartDaoImpl implements CartDao{
+	
 	private Connection con = null;
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
+	
+	// 向购物车表中添加一条记录
 	@Override
 	public int saveCart(Cart cart) throws Exception {
 		int result = 0;
@@ -34,6 +37,7 @@ public class CartDaoImpl implements CartDao{
 
 	}
 
+	// 更新购物车表的一条记录
 	@Override
 	public int updateCart(Cart cart) throws Exception {
 		int result = 0;
@@ -52,6 +56,7 @@ public class CartDaoImpl implements CartDao{
 		return result;
 	}
 
+	// 删除购物车表的一条记录
 	@Override
 	public int removeCart(Cart cart) throws Exception {
 		int result = 0;
@@ -72,6 +77,7 @@ public class CartDaoImpl implements CartDao{
 
 	}
 
+	// 查询此购物车对应用户的所有商家的购物车
 	@Override
 	public List<Cart> listCart(Cart cart) throws Exception {
 		List<Cart> list = new ArrayList();
@@ -93,6 +99,7 @@ public class CartDaoImpl implements CartDao{
 		sql.append(" b.starPrice bstarPrice, ");
 		sql.append(" b.deliveryPrice bdeliveryPrice, ");
 		sql.append(" b.remarks bremarks ");
+		// 将将购物车表和食品表左连接之后在与商家表进行左连接
 		sql.append(" from (cart c left join food f on c.foodId=f.foodId) ");
 		sql.append(" left join business b on c.businessId=b.businessId ");
 		sql.append(" where c.userId=? ");
@@ -111,7 +118,7 @@ public class CartDaoImpl implements CartDao{
 				c.setBusinessId(rs.getInt("businessId"));
 				c.setUserId(rs.getString("userId"));
 				c.setQuantity(rs.getInt("quantity"));
-
+				// food子对象
 				Food food = new Food();
 				food.setFoodId(rs.getInt("ffoodId"));
 				food.setFoodName(rs.getString("ffoodName"));
@@ -121,7 +128,7 @@ public class CartDaoImpl implements CartDao{
 				food.setBusinessId(rs.getInt("fbusinessId"));
 				food.setRemarks(rs.getString("fremarks"));
 				c.setFood(food);
-
+				// business子对象
 				Business business = new Business();
 				business.setBusinessId(rs.getInt("bbusinessId"));
 				business.setBusinessName(rs.getString("bbusinessName"));

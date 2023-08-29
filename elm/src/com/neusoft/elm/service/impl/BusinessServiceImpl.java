@@ -10,6 +10,7 @@ import com.neusoft.elm.util.DBUtil;
 
 public class BusinessServiceImpl implements BusinessService{
 	
+	// 根据点餐分类编号查询所属商家信息
 	@Override
 	public List<Business> listBusinessByOrderTypeId(Integer orderTypeId) {
 		List<Business> list = new ArrayList<>();
@@ -25,6 +26,7 @@ public class BusinessServiceImpl implements BusinessService{
 		return list;
 	}
 	 
+	// 根据商家编号查询商家信息
 	@Override
 	public Business getBusinessById(Integer businessId) {
 		Business business = null;

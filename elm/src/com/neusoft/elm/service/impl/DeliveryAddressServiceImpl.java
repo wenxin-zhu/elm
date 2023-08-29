@@ -11,6 +11,7 @@ import com.neusoft.elm.util.DBUtil;
 
 public class DeliveryAddressServiceImpl implements DeliveryAddressService{
 
+	// 根据用户编号查询所属送货地址
 	@Override
 	public List<DeliveryAddress> listDeliveryAddressByUserId(String userId) {
 		List<DeliveryAddress> list = new ArrayList<>();
@@ -26,6 +27,7 @@ public class DeliveryAddressServiceImpl implements DeliveryAddressService{
 		return list;
 	}
 
+	// 向送货地址表中添加一条记录
 	@Override
 	public int saveDeliveryAddress(DeliveryAddress deliveryAddress) {
 		int result = 0;
@@ -42,6 +44,7 @@ public class DeliveryAddressServiceImpl implements DeliveryAddressService{
 
 	}
 
+	// 根据送货地址编号查询送货地址
 	@Override
 	public DeliveryAddress getDeliveryAddressById(Integer daId) {
 		DeliveryAddress deliveryAddress = null;
@@ -57,6 +60,7 @@ public class DeliveryAddressServiceImpl implements DeliveryAddressService{
 		return deliveryAddress;
 	}
 
+	// 更新送货地址信息
 	@Override
 	public int updateDeliveryAddress(DeliveryAddress deliveryAddress) {
 		int result = 0;
@@ -72,6 +76,7 @@ public class DeliveryAddressServiceImpl implements DeliveryAddressService{
 		return result;
 	}
 
+	// 根据送货地址编号删除一条记录
 	@Override
 	public int removeDeliveryAddress(Integer daId) {
 		int result = 0;

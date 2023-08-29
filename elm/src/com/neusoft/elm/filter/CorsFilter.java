@@ -10,7 +10,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 
-//À¹½ØËùÓĞÇëÇó£¬°üÀ¨¾²Ì¬×ÊÔ´£¬/*µÄÓÅÏÈ¼¶¸ßÓÚ/
+// å¤„ç†è·¨åŸŸè®¿é—®ï¼Œåœ¨æœåŠ¡å™¨æ”¶åˆ°è¯·æ±‚æ—¶æ‰§è¡Œ
+// æ‹¦æˆªæ‰€æœ‰è¯·æ±‚ï¼ŒåŒ…æ‹¬é™æ€èµ„æºï¼Œ/*çš„ä¼˜å…ˆçº§é«˜äº/
 @WebFilter("/*")
 public class CorsFilter implements Filter{
 	
@@ -20,14 +21,14 @@ public class CorsFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException { 
 		HttpServletResponse response = (HttpServletResponse) servletResponse; 
-		//×¢Òâ£ºÕâÀïÉèÖÃÖ»ÔÊĞíhttp://localhost:8081½øĞĞ¿çÓò·ÃÎÊ
-		//Èç¹ûÏëÒªÔÊĞí·¢ËÍCookie£¬ÄÇÃ´Access-Control-Allow-OriginµÄÖµ²»ÄÜÎª"*"£¬ÒÔÃâ³öÏÖ°²È«ÎÊÌâ
-		response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081"); 
-		//ÔÊĞí·¢ËÍCookie
+		//æ³¨æ„ï¼šè¿™é‡Œè®¾ç½®åªå…è®¸http://localhost:8081è¿›è¡Œè·¨åŸŸè®¿é—®
+		//å¦‚æœæƒ³è¦å…è®¸å‘é€Cookieï¼Œé‚£ä¹ˆAccess-Control-Allow-Originçš„å€¼ä¸èƒ½ä¸º"*"ï¼Œä»¥å…å‡ºç°å®‰å…¨é—®é¢˜
+		response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081"); 	
+		//å…è®¸å‘é€Cookie
 		response.setHeader("Access-Control-Allow-Credentials", "true"); 
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT"); 
 		response.setHeader("Access-Control-Max-Age", "3628800"); 
-		response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Authorization"); 
+		response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Authorization"); 
 		filterChain.doFilter(servletRequest, servletResponse); 
 	} 
   

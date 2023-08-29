@@ -13,53 +13,52 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 /**
-* ×Ô¶¨ÒåÇ°¶Ë¿ØÖÆÆ÷ À¹½Øurl¸ñÊ½ÒªÇó£º /¿ØÖÆÆ÷ÀàÃû/¿ØÖÆÆ÷·½·¨Ãû
+* è‡ªå®šä¹‰å‰ç«¯æ§åˆ¶å™¨ æ‹¦æˆªurlæ ¼å¼è¦æ±‚ï¼š /æ§åˆ¶å™¨ç±»å/æ§åˆ¶å™¨æ–¹æ³•å
 */
 
-// À¹½ØËùÓĞÇëÇó£¬µ«²»°üÀ¨¾²Ì¬×ÊÔ´
+// æ‹¦æˆªæ‰€æœ‰è¯·æ±‚ï¼Œä½†ä¸åŒ…æ‹¬é™æ€èµ„æº
 @WebServlet("/") 
 public class DispatcherServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//ÖĞÎÄ±àÂë´¦Àí
+		// ä¸­æ–‡ç¼–ç å¤„ç†
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json;charset=utf-8");
 		
-		//»ñÈ¡¿Í»§¶ËÇëÇóÂ·¾¶
+		// è·å–å®¢æˆ·ç«¯è¯·æ±‚è·¯å¾„
 		String path = request.getServletPath();
 		
-		//Ô¼¶¨´óÓÚÅäÖÃ
-		//¸ù¾İÇëÇóÂ·¾¶£¬½«ControllerµÄÀàÃûºÍ·½·¨Ãû½âÎö³öÀ´
+		// çº¦å®šå¤§äºé…ç½®
+		// æ ¹æ®è¯·æ±‚è·¯å¾„ï¼Œå°†Controllerçš„ç±»åå’Œæ–¹æ³•åè§£æå‡ºæ¥
 		String className = path.substring(1,path.lastIndexOf("/"));
 		String methodName = path.substring(path.lastIndexOf("/")+1);
 		
-		// Ïò¿Í»§¶ËÏìÓ¦Êä³öÁ÷
+		// å‘å®¢æˆ·ç«¯å“åº”è¾“å‡ºæµ
 		PrintWriter out = null;
 		
-		//ÅĞ¶ÏÇëÇóÂ·¾¶£¬¸ù¾İ²»Í¬µÄÇëÇó£¬·Ö·¢¸ø²»Í¬µÄÒµÎñ´¦ÀíÆ÷
+		// åˆ¤æ–­è¯·æ±‚è·¯å¾„ï¼Œæ ¹æ®ä¸åŒçš„è¯·æ±‚ï¼Œåˆ†å‘ç»™ä¸åŒçš„ä¸šåŠ¡å¤„ç†å™¨
 		try{
-			//java·´Éä
-			//Í¨¹ıControllerÀàÈ«Ãû»ñÈ¡´ËÀàµÄËùÓĞĞÅÏ¢£¨·µ»ØÖµÎª¸ÃÀàµÄÃèÊöÀà£©
+			// javaåå°„
+			// é€šè¿‡Controllerç±»å…¨åè·å–æ­¤ç±»çš„æ‰€æœ‰ä¿¡æ¯ï¼ˆè¿”å›å€¼ä¸ºè¯¥ç±»çš„æè¿°ç±»ï¼‰à£©
 			Class clazz = Class.forName("com.neusoft.elm.controller."+className);
-			//´´½¨ControllerÀàµÄ¶ÔÏó
+			// åˆ›å»ºControllerç±»çš„å¯¹è±¡
 			Object controller = clazz.newInstance();
-			//»ñÈ¡ControllerÀà¶ÔÏóÖĞµÄ·½·¨
+			// è·å–Controllerç±»å¯¹è±¡ä¸­çš„æ–¹æ³•
 			Method method = clazz.getMethod(methodName,new Class[]{HttpServletRequest.class});
-			//µ÷ÓÃÉÏÃæ»ñÈ¡µÄ·½·¨
+			// è°ƒç”¨ä¸Šé¢è·å–çš„æ–¹æ³•
 			Object result = method.invoke(controller,new Object[]{request});
-			//»ñÈ¡Ïò¿Í»§¶ËÏìÓ¦µÄÊä³öÁ÷
+			// è·å–å‘å®¢æˆ·ç«¯å“åº”çš„è¾“å‡ºæµ
 			out = response.getWriter();
-			//×ª»»³Éjson¸ñÊ½(writeValueAsString)
+			// è½¬æ¢æˆjsonæ ¼å¼(writeValueAsString)
 			ObjectMapper om = new ObjectMapper();
-			//Ïò¿Í»§¶ËÏìÓ¦jsonÊı¾İ
+			// å‘å®¢æˆ·ç«¯å“åº”jsonæ•°æ®
 			out.print(om.writeValueAsString(result));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("DispatcherServletĞÅÏ¢£ºÇëÇóurl£º"+path);
-			System.out.println("DispatcherServletĞÅÏ¢£ºÀàÃû£º"+className+"\t·½·¨Ãû£º"+methodName);
-			
+			System.out.println("DispatcherServletä¿¡æ¯ï¼šè¯·æ±‚urlï¼š"+path);
+			System.out.println("DispatcherServletä¿¡æ¯ï¼šç±»åï¼š"+ className+ "\tæ–¹æ³•åï¼š"+methodName);
 		} finally {
 			out.close();
 		}

@@ -6,20 +6,36 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// æ•°æ®åº“å·¥å…·ç±»
 public class DBUtil {
 	
+	// æ•°æ®åº“ç›¸å…³é…ç½®
 	private static final String URL = "jdbc:mysql://localhost:3306/elm?characterEncoding=utf-8";
 	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "123456";
 	
-	// Ïß³Ì¾Ö²¿¶ÔÏó
+	// çº¿ç¨‹å±€éƒ¨å¯¹è±¡
 	private static final ThreadLocal<Connection> TL = new ThreadLocal<>();
 	
-	// »ñÈ¡Connection
+	// åˆ›å»ºè¿æ¥
+	private static Connection createConnection() {
+		 Connection con = null;
+		 if (con == null) {
+			 try {
+				 Class.forName(DRIVER);
+				 con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			 } catch (Exception e) {
+				 e.printStackTrace();
+			 }
+		 }
+		 return con;
+	}
+	
+	// è·å–è¿æ¥
 	public static Connection getConnection() {
 		Connection con = null;
-		// ´ÓÏß³Ì¾Ö²¿¶ÔÏóÖĞ»ñÈ¡Connection
+		// ä»çº¿ç¨‹å±€éƒ¨å¯¹è±¡ä¸­è·å–Connection
 		con = TL.get();
 		if (con==null) {
 			con = createConnection();
@@ -28,7 +44,9 @@ public class DBUtil {
 		return con;
 	}
 	
-	// ¿ªÆôÒ»¸öÊÂÎñ
+	
+	
+	// å¼€å¯ä¸€ä¸ªäº‹åŠ¡
 	public static void beginTransaction() throws Exception {
 		Connection con = null;
 		con = TL.get();
@@ -39,19 +57,19 @@ public class DBUtil {
 		con.setAutoCommit(false);
 	}
 	
-	// Ìá½»Ò»¸öÊÂÎñ
+	// æäº¤ä¸€ä¸ªäº‹åŠ¡
 	public static void commitTransaction() throws Exception {
 		Connection con = TL.get();
 		con.commit();
 	}
 	
-	// »Ø¹öÒ»¸öÊÂÎñ
+	// å›æ»šä¸€ä¸ªäº‹åŠ¡
 	public static void rollbackTransaction() throws Exception {
 		Connection con = TL.get();
 		con.rollback();
 	}
 	
-	// ¹Ø±Õ¸÷ÖÖ×ÊÔ´£¨dao²ã²éÑ¯£©
+	// å…³é—­å„ç§èµ„æºï¼ˆdaoå±‚æŸ¥è¯¢ï¼‰
 	public static void close(ResultSet rs, PreparedStatement pst) {
 		try {
 			if (rs != null) {
@@ -65,7 +83,7 @@ public class DBUtil {
 		}
 	}
 	
-	// ¹Ø±Õ¸÷ÖÖ×ÊÔ´£¨dao²ãÔöÉ¾¸Ä£©
+	// å…³é—­å„ç§èµ„æºï¼ˆdaoå±‚å¢åˆ æ”¹ï¼‰
 	public static void close(PreparedStatement pst) {
 		try {
 			if (pst != null) {
@@ -76,31 +94,17 @@ public class DBUtil {
 		}
 	}
 	
-	// ¹Ø±Õ¸÷ÖÖ×ÊÔ´
+	// å…³é—­å„ç§èµ„æº
 	public static void close() {
 		Connection con = TL.get();
 		try {
 			if (con != null) {
 			con.close();
 		}
-		//ÖÁ¹ØÖØÒª£¬·ñÔòÈİÒ×Ôì³ÉÄÚ´æÒç³öµÈÎÊÌâ¡£
+		//è‡³å…³é‡è¦ï¼Œå¦åˆ™å®¹æ˜“é€ æˆå†…å­˜æº¢å‡ºç­‰é—®é¢˜ã€‚
 		TL.remove();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	// ´´½¨Á¬½Ó
-	private static Connection createConnection() {
-		 Connection con = null;
-		 if (con == null) {
-			 try {
-				 Class.forName(DRIVER);
-				 con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-			 } catch (Exception e) {
-				 e.printStackTrace();
-			 }
-		 }
-		 return con;
 	}
 }

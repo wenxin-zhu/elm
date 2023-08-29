@@ -13,6 +13,7 @@ public class UserDaoImpl implements UserDao{
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 	 
+	// 根据用户编号与密码查询用户信息
 	@Override
 	public User getUserByIdByPass(String userId, String password) throws Exception {
 		User user = null;
@@ -38,6 +39,7 @@ public class UserDaoImpl implements UserDao{
 		return user;
 	}
 	 
+	// 根据用户编号查询用户表返回的行数（用于判断用户是否存在）
 	@Override
 	public int getUserById(String userId) throws Exception{
 		int result = 0;
@@ -56,6 +58,7 @@ public class UserDaoImpl implements UserDao{
 		return result;
 	}
 	 
+	// 向用户表中添加一条记录
 	@Override
 	public int saveUser(User user) throws Exception{
 		int result = 0;

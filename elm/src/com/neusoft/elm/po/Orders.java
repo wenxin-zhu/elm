@@ -2,19 +2,20 @@ package com.neusoft.elm.po;
 
 import java.util.List;
 
+// å¯¹åº”è®¢å•è¡¨
 public class Orders {
 
-	private Integer orderId;
-	private String userId;
-	private Integer businessId;
-	private String orderDate;
-	private Double orderTotal;
-	private Integer daId; //ËÍ»õµØÖ·±àºÅ
-	private Integer orderState; //¶©µ¥×´Ì¬£¨0£ºÎ´Ö§¸¶£» 1£ºÒÑÖ§¸¶£©
+	private Integer orderId; // è®¢å•ç¼–å·
+	private String userId; // æ‰€å±ç”¨æˆ·ç¼–å·
+	private Integer businessId; // æ‰€å±å•†å®¶ç¼–å·
+	private String orderDate; // è®¢è´­æ—¥æœŸ
+	private Double orderTotal; // è®¢å•æ€»ä»·
+	private Integer daId; // æ‰€å±é€è´§åœ°å€ç¼–å·
+	private Integer orderState; // è®¢å•çŠ¶æ€ï¼ˆ0ï¼šæœªæ”¯ä»˜ï¼› 1ï¼šå·²æ”¯ä»˜ï¼‰
 	 
-	//¶à¶ÔÒ»£ºËùÊôÉÌ¼Ò
+	// å¤šå¯¹ä¸€ï¼šæ‰€å±å•†å®¶
 	private Business business;
-	//Ò»¶Ô¶à£º¶©µ¥Ã÷Ï¸
+	// ä¸€å¯¹å¤šï¼šè®¢å•æ˜ç»†
 	private List<OrderDetailet> list;
 	
 	public Integer getOrderId() {

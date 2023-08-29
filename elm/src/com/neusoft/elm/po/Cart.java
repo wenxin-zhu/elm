@@ -1,14 +1,17 @@
 package com.neusoft.elm.po;
 
+// 对应购物车表
 public class Cart {
 
-	private Integer cartId;
-	private Integer foodId;
-	private Integer businessId;
-	private String userId;
-	private Integer quantity;
+	private Integer cartId; // 无意义编号
+	private Integer foodId; // 食品编号
+	private Integer businessId; // 所属商家编号
+	private String userId; // 所属用户编号
+	private Integer quantity; // 同一类型食品的购买数量
 	
+	//多对一：所属食品
 	private Food food;
+	//多对一：所属商家
 	private Business business;
 	
 	public Integer getCartId() {

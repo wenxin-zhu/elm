@@ -13,6 +13,7 @@ import com.neusoft.elm.util.DBUtil;
 
 public class FoodServiceImpl implements FoodService{
 	
+	// 根据商家编号查询所属食品信息
 	@Override
 	public List<Food> listFoodByBusinessId(Integer businessId) {
 		List<Food> list = new ArrayList<>();

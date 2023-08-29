@@ -16,26 +16,29 @@ public class OrderDetailetDaoImpl implements OrderDetailetDao{
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 	 
+	// 向订单明细表添加订单明细信息
 	@Override
 	public int saveOrderDetailetBatch(List<OrderDetailet> list) throws Exception {
 		int result = 0;
+		// 按照下列格式插入多条记录
 		//insert into xxx values(xxx,xxx,xxx),(xxx,xxx,xxx),(xxx,xxx,xxx)
 		StringBuffer stringBuffer = new StringBuffer("insert into orderDetailet(orderId,foodId,quantity) values");
 		for(OrderDetailet od : list) {
 			stringBuffer.append("("+od.getOrderId()+","+od.getFoodId()+","+od.getQuantity()+"),");
 		}
-		//去掉sql中最后一个逗号
+		//去掉sql语句中的最后一个逗号
 		String sql = stringBuffer.toString().substring(0,stringBuffer.toString().length()-1);
 		try {
 			con = DBUtil.getConnection();
 			pst = con.prepareStatement(sql);
 			result = pst.executeUpdate();
-		}finally {
+		} finally {
 			DBUtil.close(pst);
 		}
 		return result;
 	}
 	 
+	// 根据订单编号查询订单明细信息
 	@Override
 	public List<OrderDetailet> listOrderDetailetByOrderId(Integer orderId) throws Exception{
 		List<OrderDetailet> list = new ArrayList<>();
@@ -45,6 +48,7 @@ public class OrderDetailetDaoImpl implements OrderDetailetDao{
 		sql.append(" f.foodId ffoodId, ");
 		sql.append(" f.foodName ffoodName, ");
 		sql.append(" f.foodPrice ffoodPrice ");
+		// 订单明细表左连接食品表
 		sql.append(" from OrderDetailet o left join food f on o.foodId=f.foodId ");
 		sql.append(" where o.orderId=?");
 		 
@@ -59,7 +63,7 @@ public class OrderDetailetDaoImpl implements OrderDetailetDao{
 				od.setOrderId(rs.getInt("orderId"));
 				od.setFoodId(rs.getInt("foodId"));
 				od.setQuantity(rs.getInt("quantity"));
-				 
+				// 食品子对象
 				Food food = new Food();
 				food.setFoodId(rs.getInt("ffoodId"));
 				food.setFoodName(rs.getString("ffoodName"));

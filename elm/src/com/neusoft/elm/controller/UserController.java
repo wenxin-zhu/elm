@@ -7,6 +7,7 @@ import com.neusoft.elm.service.impl.UserServiceImpl;
 
 public class UserController {
 		
+	// 根据用户编号与密码查询用户信息
 	public Object getUserByIdByPass(HttpServletRequest request) throws Exception{
 		String userId = request.getParameter("userId");
 		String password = request.getParameter("password");
@@ -15,6 +16,7 @@ public class UserController {
 		return user;
 	}
 	
+	// 根据用户编号查询用户表返回的行数
 	public Object getUserById(HttpServletRequest request) throws Exception{
 		String userId = request.getParameter("userId");
 		UserService service = new UserServiceImpl();
@@ -22,6 +24,7 @@ public class UserController {
 		return result;
 	}
 	
+	// 向用户表中添加一条记录
 	public Object saveUser(HttpServletRequest request) throws Exception{
 		User user = new User();
 		user.setUserId(request.getParameter("userId"));

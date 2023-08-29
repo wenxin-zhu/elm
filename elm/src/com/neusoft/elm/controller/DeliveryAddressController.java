@@ -10,6 +10,7 @@ import com.neusoft.elm.service.impl.DeliveryAddressServiceImpl;
 
 public class DeliveryAddressController {
 
+	// 根据用户编号查询所属送货地址
 	public Object listDeliveryAddressByUserId(HttpServletRequest request) throws Exception {
 		String userId = request.getParameter("userId");
 		DeliveryAddressService service = new DeliveryAddressServiceImpl();
@@ -17,6 +18,7 @@ public class DeliveryAddressController {
 		return list;
 	}
 	
+	// 向送货地址表中添加一条记录
 	public Object saveDeliveryAddress(HttpServletRequest request) throws Exception {
 		DeliveryAddress deliveryAddress = new DeliveryAddress();
 		deliveryAddress.setContactName(request.getParameter("contactName"));
@@ -29,6 +31,7 @@ public class DeliveryAddressController {
 		return result;
 	}
 	
+	// 根据送货地址编号查询送货地址
 	public Object getDeliveryAddressById(HttpServletRequest request) throws Exception {
 		Integer daId = Integer.valueOf(request.getParameter("daId"));
 		DeliveryAddressService service = new DeliveryAddressServiceImpl();
@@ -36,6 +39,7 @@ public class DeliveryAddressController {
 		return deliveryAddress;
 	}
 
+	// 根据送货地址编号更新送货地址信息
 	public Object updateDeliveryAddress(HttpServletRequest request) throws Exception {
 		DeliveryAddress deliveryAddress = new DeliveryAddress();
 		deliveryAddress.setContactName(request.getParameter("contactName"));
@@ -48,6 +52,7 @@ public class DeliveryAddressController {
 		return result;
 	}
 
+	// 根据送货地址编号删除一条记录
 	public Object removeDeliveryAddress(HttpServletRequest request) throws Exception {
 		Integer daId = Integer.valueOf(request.getParameter("daId"));
 		DeliveryAddressService service = new DeliveryAddressServiceImpl();

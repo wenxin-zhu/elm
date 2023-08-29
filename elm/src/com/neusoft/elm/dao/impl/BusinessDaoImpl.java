@@ -15,6 +15,7 @@ public class BusinessDaoImpl implements BusinessDao{
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 	
+	// æ ¹æ®ç‚¹é¤åˆ†ç±»ç¼–å·æŸ¥è¯¢æ‰€å±å•†å®¶ä¿¡æ¯
 	@Override
 	public List<Business> listBusinessByOrderTypeId(Integer orderTypeId) throws Exception {
 		List<Business> list = new ArrayList<>();
@@ -37,13 +38,13 @@ public class BusinessDaoImpl implements BusinessDao{
 				business.setRemarks(rs.getString("remarks"));
 				list.add(business);
 			}
-		// ÒòÎªÒì³£Å×³ö¸øservice²ã´¦Àí£¬Òò´Ë²»ÓÃcatch²¶»ñÒì³£
 		} finally {
 			DBUtil.close(rs,pst);
 		}
 		return list;
 	}
 	 
+	// æ ¹æ®å•†å®¶ç¼–å·æŸ¥è¯¢å•†å®¶ä¿¡æ¯
 	@Override
 	public Business getBusinessById(Integer businessId) throws Exception{
 		Business business = null;

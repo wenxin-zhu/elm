@@ -9,6 +9,8 @@ import com.neusoft.elm.service.CartService;
 import com.neusoft.elm.service.impl.CartServiceImpl;
 
 public class CartController {
+	
+	// 向购物车表中添加一条记录
 	public Object saveCart(HttpServletRequest request) throws Exception {
 		Cart cart = new Cart();
 		cart.setFoodId(Integer.valueOf(request.getParameter("foodId")));
@@ -19,6 +21,7 @@ public class CartController {
 		return result;
 	}
 
+	// 根据用户编号、商家编号、食品编号更新数量
 	public Object updateCart(HttpServletRequest request) throws Exception {
 		Cart cart = new Cart();
 		cart.setFoodId(Integer.valueOf(request.getParameter("foodId")));
@@ -29,7 +32,9 @@ public class CartController {
 		int result = service.updateCart(cart);
 		return result;
 	}
-
+	
+	// 根据用户编号、商家编号、食品编号删除购物车表中的一条食品记录
+	// 根据用户编号、商家编号删除购物车表中的多条条记录
 	public Object removeCart(HttpServletRequest request) throws Exception {
 		Cart cart = new Cart();
 		cart.setFoodId(Integer.valueOf(request.getParameter("foodId")));
@@ -40,6 +45,8 @@ public class CartController {
 		return result;
 	}
 
+	// 根据用户编号查询此用户所有购物车信息
+	// 根据用户编号和商家编号，查询此用户购物车中某个商家的所有购物车信息
 	public Object listCart(HttpServletRequest request) throws Exception {
 		Cart cart = new Cart();
 		cart.setUserId(request.getParameter("userId"));

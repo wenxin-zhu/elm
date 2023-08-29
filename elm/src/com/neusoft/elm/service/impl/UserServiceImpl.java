@@ -8,6 +8,7 @@ import com.neusoft.elm.util.DBUtil;
 
 public class UserServiceImpl implements UserService{
 	
+	// 根据用户编号与密码查询用户信息
 	@Override
 	public User getUserByIdByPass(String userId, String password) {
 		User user = null;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 	
+	// 根据用户编号查询用户表返回的行数
 	@Override
 	public int getUserById(String userId) {
 		int result = 0;
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService{
 		return result;
 	}
 	
+	// 向用户表中添加一条记录
 	@Override
 	public int saveUser(User user) {
 		int result = 0;

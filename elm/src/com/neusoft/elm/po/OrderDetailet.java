@@ -1,13 +1,14 @@
 package com.neusoft.elm.po;
 
+// 对应订单明细表
 public class OrderDetailet {
 
-	private Integer odId;
-	private Integer orderId;
-	private Integer foodId;
-	private Integer quantity;
+	private Integer odId; // 订单明细编号
+	private Integer orderId; // 所属订单编号
+	private Integer foodId; // 所属食品编号
+	private Integer quantity; // 数量
 	 
-	//���һ������ʳƷ
+	// 多对一：所属食品
 	private Food food;
 
 	public Integer getOdId() {

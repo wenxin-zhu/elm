@@ -11,10 +11,12 @@ import com.neusoft.elm.po.DeliveryAddress;
 import com.neusoft.elm.util.DBUtil;
 
 public class DeliveryAddressDaoImpl implements DeliveryAddressDao{
+	
 	private Connection con = null;
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 
+	// 根据用户编号查询所属送货地址
 	@Override
 	public List<DeliveryAddress> listDeliveryAddressByUserId(String userId) throws Exception {
 		List<DeliveryAddress> list = new ArrayList<>();
@@ -40,6 +42,7 @@ public class DeliveryAddressDaoImpl implements DeliveryAddressDao{
 		return list;
 	}
 
+	// 向送货地址表中添加一条记录
 	@Override
 	public int saveDeliveryAddress(DeliveryAddress deliveryAddress) throws Exception {
 		int result = 0;
@@ -59,6 +62,7 @@ public class DeliveryAddressDaoImpl implements DeliveryAddressDao{
 		return result;
 	}
 
+	// 根据送货地址编号查询送货地址
 	@Override
 	public DeliveryAddress getDeliveryAddressById(Integer daId) throws Exception {
 		DeliveryAddress deliveryAddress = null;
@@ -83,7 +87,7 @@ public class DeliveryAddressDaoImpl implements DeliveryAddressDao{
 		return deliveryAddress;
 	}
 
-
+	// 根据送货地址编号更新送货地址信息
 	@Override
 	public int updateDeliveryAddress(DeliveryAddress deliveryAddress) throws Exception {
 		int result = 0;
@@ -103,7 +107,7 @@ public class DeliveryAddressDaoImpl implements DeliveryAddressDao{
 		return result;
 	}
 
-
+	// 根据送货地址编号删除一条记录
 	@Override
 	public int removeDeliveryAddress(Integer daId) throws Exception {
 		int result = 0;

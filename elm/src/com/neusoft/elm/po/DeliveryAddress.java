@@ -1,12 +1,14 @@
 package com.neusoft.elm.po;
 
+// 对应送货地址表
 public class DeliveryAddress {
-	private Integer daId; 
-	private String contactName;
-	private Integer contactSex;
-	private String contactTel;
-	private String address; 
-	private String userId;
+	
+	private Integer daId; // 送货地址编号
+	private String contactName; // 联系人姓名
+	private Integer contactSex; // 联系人性别
+	private String contactTel; // 联系人电话
+	private String address; // 送货地址
+	private String userId; // 所属用户编号
 	
 	public Integer getDaId() {
 		return daId;

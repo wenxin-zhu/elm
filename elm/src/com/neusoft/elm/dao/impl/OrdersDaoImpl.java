@@ -17,7 +17,7 @@ public class OrdersDaoImpl implements OrdersDao{
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 	
-	// 添加订单
+	// 向订单表中插入一条记录
 	@Override
 	public int saveOrders(Orders orders) throws Exception {
 		int orderId = 0;
@@ -42,7 +42,7 @@ public class OrdersDaoImpl implements OrdersDao{
 		return orderId;
 	}
 	
-	// 根据ID获取订单
+	// 根据订单编号查询订单
 	@Override
 	public Orders getOrdersById(Integer orderId) throws Exception{
 		Orders orders = null;
@@ -80,42 +80,43 @@ public class OrdersDaoImpl implements OrdersDao{
 		return orders;
 	}
 	 
+	// 根据用户编号查询该用户的所有订单
 	@Override
 	public List<Orders> listOrdersByUserId(String userId) throws Exception{
-	List<Orders> list = new ArrayList<>();
-	StringBuffer sql = new StringBuffer();
-	sql.append(" select o.*, ");
-	sql.append(" b.businessId bbusinessId, ");
-	sql.append(" b.businessName bbusinessName, ");
-	sql.append(" b.deliveryPrice bdeliveryPrice ");
-	sql.append(" from orders o left join business b on o.businessId=b.businessId ");
-	sql.append(" where o.userId=? ");
-	try {
-		con = DBUtil.getConnection();
-		pst = con.prepareStatement(sql.toString());
-		pst.setString(1, userId);
-		rs = pst.executeQuery();
-		while(rs.next()) {
-			Orders orders = new Orders();
-			orders.setOrderId(rs.getInt("orderId"));
-			orders.setUserId(rs.getString("userId"));
-			orders.setBusinessId(rs.getInt("businessId"));
-			orders.setOrderDate(rs.getString("orderDate"));
-			orders.setOrderTotal(rs.getDouble("orderTotal"));
-			orders.setDaId(rs.getInt("daId"));
-			orders.setOrderState(rs.getInt("orderState"));
-			
-			Business business = new Business();
-			business.setBusinessId(rs.getInt("bbusinessId"));
-			business.setBusinessName(rs.getString("bbusinessName"));
-			business.setDeliveryPrice(rs.getDouble("bdeliveryPrice"));
-			orders.setBusiness(business);
-			
-			list.add(orders);
+		List<Orders> list = new ArrayList<>();
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select o.*, ");
+		sql.append(" b.businessId bbusinessId, ");
+		sql.append(" b.businessName bbusinessName, ");
+		sql.append(" b.deliveryPrice bdeliveryPrice ");
+		sql.append(" from orders o left join business b on o.businessId=b.businessId ");
+		sql.append(" where o.userId=? ");
+		try {
+			con = DBUtil.getConnection();
+			pst = con.prepareStatement(sql.toString());
+			pst.setString(1, userId);
+			rs = pst.executeQuery();
+			while(rs.next()) {
+				Orders orders = new Orders();
+				orders.setOrderId(rs.getInt("orderId"));
+				orders.setUserId(rs.getString("userId"));
+				orders.setBusinessId(rs.getInt("businessId"));
+				orders.setOrderDate(rs.getString("orderDate"));
+				orders.setOrderTotal(rs.getDouble("orderTotal"));
+				orders.setDaId(rs.getInt("daId"));
+				orders.setOrderState(rs.getInt("orderState"));
+				
+				Business business = new Business();
+				business.setBusinessId(rs.getInt("bbusinessId"));
+				business.setBusinessName(rs.getString("bbusinessName"));
+				business.setDeliveryPrice(rs.getDouble("bdeliveryPrice"));
+				orders.setBusiness(business);
+				
+				list.add(orders);
+			}
+		}finally {
+			DBUtil.close(pst);
 		}
-	}finally {
-	DBUtil.close(pst);
-	}
-	return list;
+		return list;
 	}
 }

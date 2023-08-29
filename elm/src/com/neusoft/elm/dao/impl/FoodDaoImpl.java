@@ -16,6 +16,7 @@ public class FoodDaoImpl implements FoodDao{
 	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 	
+	// 根据商家编号查询所属食品信息
 	@Override
 	public List<Food> listFoodByBusinessId(Integer businessId) throws Exception {
 		List<Food> list = new ArrayList<>();

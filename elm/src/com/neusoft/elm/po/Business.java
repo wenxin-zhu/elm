@@ -1,16 +1,17 @@
 package com.neusoft.elm.po;
 
+// 对应商家表
 public class Business {
 
-	private Integer businessId;
-	private String businessName;
-	private String businessAddress;
-	private String businessExplain;
-	private String businessImg;
-	private Integer orderTypeId;
-	private double starPrice; //���ͷ�
-	private double deliveryPrice; //���ͷ�
-	private String remarks;
+	private Integer businessId; // 商家编号
+	private String businessName; // 商家名称
+	private String businessAddress; // 商家地址
+	private String businessExplain; // 商家介绍
+	private String businessImg; // 商家图片
+	private Integer orderTypeId; // 点餐分类
+	private double starPrice; // 起送费
+	private double deliveryPrice; // 配送费
+	private String remarks; // 备注
 	
 	public Integer getBusinessId() {
 		return businessId;

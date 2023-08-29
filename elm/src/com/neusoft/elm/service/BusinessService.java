@@ -6,8 +6,9 @@ import com.neusoft.elm.po.Business;
 
 public interface BusinessService {
 
-	// ¸ù¾İµã²Í·ÖÀà±àºÅ²éÑ¯ËùÊôÉÌ¼ÒĞÅÏ¢
+	// æ ¹æ®ç‚¹é¤åˆ†ç±»ç¼–å·æŸ¥è¯¢æ‰€å±å•†å®¶ä¿¡æ¯
 	public List<Business> listBusinessByOrderTypeId(Integer orderTypeId);
-	// ¸ù¾İÉÌ¼Ò±àºÅ²éÑ¯ÉÌ¼ÒĞÅÏ¢
+	
+	// æ ¹æ®å•†å®¶ç¼–å·æŸ¥è¯¢å•†å®¶ä¿¡æ¯
 	public Business getBusinessById(Integer businessId);
 }
