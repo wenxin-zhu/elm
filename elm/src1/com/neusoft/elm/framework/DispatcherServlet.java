@@ -40,19 +40,19 @@ public class DispatcherServlet extends HttpServlet {
 		//判断请求路径，根据不同的请求，分发给不同的业务处理器
 		try{
 			//java反射
-			//通过Controller类全名获取此类的所有信息（返回值为该类的描述类）
+//			//通过Controller类全名获取此类的所有信息（返回值为该类的描述类）
 			Class clazz = Class.forName("com.neusoft.elm.controller."+className);
-			//创建Controller类的对象
+//			//创建Controller类的对象
 			Object controller = clazz.newInstance();
-			//获取Controller类对象中的方法
+//			//获取Controller类对象中的方法
 			Method method = clazz.getMethod(methodName,new Class[]{HttpServletRequest.class});
-			//调用上面获取的方法
+//			//调用上面获取的方法
 			Object result = method.invoke(controller,new Object[]{request});
-			//获取向客户端响应的输出流
+//			//获取向客户端响应的输出流
 			out = response.getWriter();
 			//转换成json格式(writeValueAsString)
 			ObjectMapper om = new ObjectMapper();
-			//向客户端响应json数据
+//			//向客户端响应json数据
 			out.print(om.writeValueAsString(result));
 			
 		} catch (Exception e) {
