@@ -1,0 +1,240 @@
+<template>
+	<div class="wrapper">
+
+		<!--header部分-->
+		<header>
+			<p>用户注册</p>
+		</header>
+
+		<!--登陆表单部分-->
+		<ul class="form-box">
+			<li>
+				<div class="title">
+					手机号码：
+				</div>
+				<div class="content">
+					<input type="text" @blur="checkUserId" v-model="user.userId" placeholder="手机号码">
+				</div>
+			</li>
+			<li>
+				<div class="title">
+					密码：
+				</div>
+				<div class="content">
+					<input type="password" v-model="user.password" placeholder="密码">
+				</div>
+			</li>
+			<li>
+				<div class="title">
+					确认密码：
+				</div>
+				<div class="content">
+					<input type="password" v-model="user.confirmPassword" placeholder="确认密码">
+				</div>
+			</li>
+			<li>
+			 <div class="title">
+					用户名称：
+			 </div>
+			 <div class="content">
+				<input type="text" v-model="user.userName" placeholder="用户名称">
+			  </div>
+			 </li>
+			<li>
+				<div class="title">
+					性别：
+				</div>
+				<div class="content" style="font-size: 3vw;">
+					<input type="radio" v-model="user.userSex"  value="1" style="width: 6vw;height: 3.2vw;">男
+					<input type="radio" v-model="user.userSex" value="0"  style="width: 6vw;height: 3.2vw;">女
+				</div>
+			</li>
+		</ul>
+
+		<div class="button-login">
+			<button  @click="register">注册</button>
+		</div>
+
+		<!-- 底部菜单部分 -->
+		<Footer></Footer>
+		</div>
+</template>
+
+<script>
+	import { reactive } from 'vue';
+	import axios from 'axios';
+	import qs from 'qs';
+	import { useRouter } from 'vue-router';
+	
+	export default {
+	  name: 'Register',
+	  setup() {
+	    const router = useRouter();
+	    const user = reactive({
+	      userId: '',
+	      password: '',
+	      userName: '',
+	      userSex: 1
+	    });
+	
+	    const checkUserId = () => {
+	      axios.post('UserController/getUserById', qs.stringify({
+	        userId: user.userId,
+	      })).then(response => {
+			console.log(user.userId);
+	            //const result = response.data.result;
+	             if (response.data === 1) {
+	              user.userId = '';
+	              alert('该手机号码已经存在！');
+	            }
+				console.log(result);
+				console.log(response.data);
+				console.log(user.userId);
+				console.log(1);
+	      }).catch(error => {
+	        console.error(error);
+			
+	      });
+	    };
+	
+	    const register = () => {
+	      if (user.userId === '') {
+	        alert('User ID cannot be empty!');
+	        return;
+	      }
+	      if (user.password === '') {
+	        alert('Password cannot be empty!');
+	        return;
+	      }
+	      if (user.userName === '') {
+	        alert('User Name cannot be empty!');
+	        return;
+	      }
+	      
+	      // Registration request
+	      axios.post('UserController/saveUser', qs.stringify(user))
+	        .then(response => {
+	          if (response.data > 0) {
+	            alert('Registration successful!');
+	            router.go(-1);
+	          } else {
+	            alert('Registration failed!');
+	          }
+	        })
+	        .catch(error => {
+	          console.error(error);
+	        });
+	    }
+	
+	    return {
+	      user,
+	      checkUserId,
+	      register
+	    };
+	  }
+	};
+</script>
+
+<style scoped>
+	/****************** 总容器 ******************/
+	.wrapper {
+		width: 100%;
+		height: 100%;
+	}
+
+	/****************** header部分 ******************/
+	.wrapper header {
+		width: 100%;
+		height: 12vw;
+		background-color: #0097FF;
+		color: #fff;
+		font-size: 4.8vw;
+
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: 1000;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/****************** 用户表单部分 ******************/
+	.wrapper .form-box {
+		width: 100%;
+		margin-top: 12vw;
+	}
+
+	.wrapper .form-box li {
+		box-sizing: border-box;
+		padding: 4vw 3vw 0 3vw;
+		/*上 右 下 左*/
+
+		display: flex;
+		align-items: center;
+	}
+
+	.wrapper .form-box li .title {
+		flex: 0 0 18vw;
+		/*标题部分不缩小&放大，固定18vw*/
+		font-size: 3vw;
+		font-weight: 700;
+		color: #666;
+	}
+
+	.wrapper .form-box li .content {
+		flex: 1;
+	}
+
+	.wrapper .form-box li input {
+		border: none;
+		outline: none;
+		/*去掉外轮廓线*/
+		width: 100%;
+		height: 4vw;
+		font-size: 3vw;
+	}
+
+	.wrapper .button-login {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 4vw 3vw 0 3vw;
+	}
+
+	.wrapper .button-login button {
+		width: 100%;
+		height: 10vw;
+		font-size: 3.8vw;
+		font-weight: 700;
+		color: #fff;
+		background-color: #38CA73;
+		border-radius: 4px;
+
+		border: none;
+		outline: none;
+	}
+
+	.wrapper .button-register {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 4vw 3vw 0 3vw;
+	}
+
+	.wrapper .button-register button {
+		width: 100%;
+		height: 10vw;
+		font-size: 3.8vw;
+		font-weight: 700;
+		color: #666;
+		background-color: #EEE;
+		border-radius: 4px;
+
+		border: none;
+		outline: none;
+		border: solid 1px #DDD;
+	}
+
+	/****************** 底部菜单部分 ******************/
+
+</style>
