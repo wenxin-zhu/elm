@@ -43,13 +43,13 @@
 		<!-- 购物车部分 -->
 		<div class="cart">
 			<div class="cart-left"><!-- 分成左右两块 -->
-				<div class="cart-left-icon">
+				<div class="cart-left-icon" :style="totalQuantity==0?'background-color:#505051;':'background-color:#3190E8;'">
 					<i class="fa fa-shopping-cart"></i>
-					<div class="cart-left-icon-quantity">3</div>
+					<div class="cart-left-icon-quantity" v-show="totalQuantity!=0">{{totalQuantity}}</div>
 				</div>
 				<div class="cart-left-info">
-					<p>&#165;12.88</p>
-					<p>另需配送费3元</p>
+					<p>&#165;{{totalPrice}}</p>
+					<p>另需配送费{{business.deliveryPrice}}元</p>
 				</div>
 			</div>
 
@@ -61,11 +61,12 @@
 				        </div>
 				        -->
 				<!-- 达到起送费 -->
-
-				<div class="cart-right-item" onclick="location.href='order.html'">
+				<div class="cart-right-item" v-show="totalSettle<business.starPrice" style="background-color: #535356;cursor: default;">
+				            &#165;{{business.starPrice}}起送
+				</div>
+				<div class="cart-right-item" @click="toOrder" v-show="totalSettle>=business.starPrice">
 					去结算
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -75,7 +76,7 @@
 	
 	
 	
-	import { ref, onMounted, watch } from 'vue';
+	import { ref, onMounted, watch, computed } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
 	import axios from 'axios';
 	import qs from 'qs';
@@ -89,7 +90,9 @@
 	    const business = ref({});
 	    const foodArr = ref([]);
 	    const user = ref(null);
-	
+	    const cartArr = ref([]);
+	    const deliveryPrice = ref(0);
+		
 	    const fetchBusinessInfo = () => {
 	      axios
 	        .post('BusinessController/getBusinessById', qs.stringify({
@@ -113,6 +116,9 @@
 	          for (let i = 0; i < foodArr.value.length; i++) {
 	            foodArr.value[i].quantity = 0;
 	          }
+			  if (user != null) {
+			  	listCart();
+			  }
 	        })
 	        .catch(error => {
 	          console.error(error);
@@ -147,7 +153,30 @@
 	        removeCart(index);
 	      }
 	    };
-	
+	    const listCart = () => {
+	    	axios
+	    		.post('CartController/listCart', qs.stringify({
+	    			businessId: businessId.value,
+	    			userId: user.value.userId,
+	    			//foodId: foodArr.value[index].foodId
+	    		}))
+	    		.then(response => {
+	    			let cartArr = response.data;
+	    			//遍历所有食品列表，设置购物车中食品数量
+	    			for (let foodItem of foodArr.value) {
+	    				foodItem.quantity = 0;
+	    				for (let cartItem of cartArr) {
+	    					if (cartItem.foodId == foodItem.foodId) {
+	    						foodItem.quantity = cartItem.quantity;
+	    					}
+	    				}
+	    			}
+	    			foodArr.value.sort();//确保vue监听到了它的变化
+	    		})
+	    		.catch(error => {
+	    			console.error(error);
+	    		});
+	    }; 
 	    const saveCart = (index) => {
 	      axios
 	        .post('CartController/saveCart', qs.stringify({
@@ -224,8 +253,46 @@
 	          console.error(error);
 	        });
 	    };
-	
-	    onMounted(() => {
+	    const totalPrice = computed(() => {
+	          let total = 0;
+	          for (let item of foodArr.value) {
+	            total += item.foodPrice * item.quantity;
+	          }
+	          return total;
+	        });
+		const totalQuantity = computed(() => {
+			let quantity = 0;
+			for (let item of foodArr.value) {
+			    quantity += item.quantity;
+			}
+			 return quantity;
+		});
+		const totalSettle = computed(() => {
+		    return totalPrice.value + deliveryPrice.value;
+		});
+		
+		const toOrder = () => {
+		  router.push({ path: '/orders', query: { businessId: business.value.businessId } });
+		};
+		watch(
+			() => route.query.businessId,
+			(newBusinessId) => {
+				businessId.value = newBusinessId;
+				fetchBusinessInfo();
+				fetchFoodInfo();
+				getSessionStorage();
+			}, {
+				immediate: true
+			}
+			// 立即执行回调函数，以便初始化 businessId
+		);
+		
+		onMounted(() => {
+		      if (user.value !== null) {
+		        listCart(0);
+		      }
+		});
+	    /*onMounted(() => {
 	      watch(
 	        () => route.query.businessId,
 	        (newBusinessId) => {
@@ -237,7 +304,7 @@
 	        { immediate: true }
 	// 立即执行回调函数，以便初始化 businessId
 	      );
-	    });
+	    });*/
 	
 	    return {
 	      businessId,
@@ -246,37 +313,14 @@
 	      user,
 		  add,
 		  minus,
+		  totalQuantity,
+		  totalPrice,
+		  totalSettle,
+		  toOrder
 	    };
 	  }
 	};
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/*import {
 		ref,
 		onMounted,
