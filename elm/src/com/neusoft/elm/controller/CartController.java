@@ -12,17 +12,25 @@ public class CartController {
 	
 	// 向购物车表中添加一条记录
 	public Object saveCart(HttpServletRequest request) throws Exception {
+		System.out.println("save");
+		System.out.println(request);
 		Cart cart = new Cart();
 		cart.setFoodId(Integer.valueOf(request.getParameter("foodId")));
 		cart.setBusinessId(Integer.valueOf(request.getParameter("businessId")));
 		cart.setUserId(request.getParameter("userId"));
 		CartService service = new CartServiceImpl();
 		int result = service.saveCart(cart);
+		System.out.println(result);
 		return result;
 	}
 
 	// 根据用户编号、商家编号、食品编号更新数量
 	public Object updateCart(HttpServletRequest request) throws Exception {
+		System.out.println("update");
+		System.out.println(request.getParameter("foodId"));
+		System.out.println(request.getParameter("businessId"));
+		System.out.println(request.getParameter("userId"));
+		System.out.println(request.getParameter("quantity"));
 		Cart cart = new Cart();
 		cart.setFoodId(Integer.valueOf(request.getParameter("foodId")));
 		cart.setBusinessId(Integer.valueOf(request.getParameter("businessId")));
@@ -30,6 +38,7 @@ public class CartController {
 		cart.setQuantity(Integer.valueOf(request.getParameter("quantity")));
 		CartService service = new CartServiceImpl();
 		int result = service.updateCart(cart);
+		System.out.println(result);
 		return result;
 	}
 	
