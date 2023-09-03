@@ -8,9 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.neusoft.elmboot.mapper.CartMapper;
 import com.neusoft.elmboot.mapper.OrderDetailetMapper;
 import com.neusoft.elmboot.mapper.OrdersMapper;
+import com.neusoft.elmboot.mapper.ScoreMapper;
 import com.neusoft.elmboot.po.Cart;
 import com.neusoft.elmboot.po.OrderDetailet;
 import com.neusoft.elmboot.po.Orders;
+import com.neusoft.elmboot.po.Score;
 import com.neusoft.elmboot.service.OrdersService;
 import com.neusoft.elmboot.util.CommonUtil;
 
@@ -23,7 +25,9 @@ public class OrdersServiceImpl implements OrdersService{
 	private OrdersMapper ordersMapper;
 	@Autowired
 	private OrderDetailetMapper orderDetailetMapper;
-	 
+	@Autowired
+	private ScoreMapper scoreMapper;
+	
 	@Override
 	@Transactional
 	public int createOrders(Orders orders) {
@@ -62,6 +66,24 @@ public class OrdersServiceImpl implements OrdersService{
 	@Override
 	public List<Orders> listOrdersByUserId(String userId){
 		return ordersMapper.listOrdersByUserId(userId);
+	}
+
+	@Override
+	public int payOrders(Integer orderId,Integer usedScore) {
+		//1.从订单表中更新支付状态
+		int a = ordersMapper.updateOrderState(orderId);
+		//2.向积分表插入一条积分记录
+		Orders orders = new Orders();
+		orders = ordersMapper.getOrdersById(orderId);
+		
+		Score score = new Score();
+		score.setUserId(orders.getUserId());
+		//score.setScoreCount((int)Math.round(orders.getOrderTotal()));
+		score.setScoreCount(usedScore);
+		score.setCreateDate(CommonUtil.getCurrentDate());
+		score.setLeftTime(30);
+		int b = scoreMapper.insertScore(score);
+		return a&b;
 	}
 
 }
