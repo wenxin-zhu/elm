@@ -1,5 +1,7 @@
 package com.neusoft.elmboot.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,21 +70,33 @@ public class OrdersServiceImpl implements OrdersService{
 		return ordersMapper.listOrdersByUserId(userId);
 	}
 
+	
 	@Override
 	public int payOrders(Integer orderId,Integer usedScore) {
 		//1.从订单表中更新支付状态
 		int a = ordersMapper.updateOrderState(orderId);
+		int b = 0;
 		//2.向积分表插入一条积分记录
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Orders orders = new Orders();
 		orders = ordersMapper.getOrdersById(orderId);
-		
 		Score score = new Score();
 		score.setUserId(orders.getUserId());
-		//score.setScoreCount((int)Math.round(orders.getOrderTotal()));
-		score.setScoreCount(usedScore);
-		score.setCreateDate(CommonUtil.getCurrentDate());
+		score.setScoreCount((int)Math.round(orders.getOrderTotal()));
+		try {
+			score.setCreateDate(sdf.format(sdf.parse(CommonUtil.getCurrentDate())));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		score.setLeftTime(30);
-		int b = scoreMapper.insertScore(score);
+		Score score2 = scoreMapper.isTheSameDay(score);
+		if(score2==null) {
+			b = scoreMapper.insertScore(score);
+		}else {
+			score.setScoreCount(score.getScoreCount()+score2.getScoreCount());
+		    b = scoreMapper.updateScore(score);
+		}
 		return a&b;
 	}
 
