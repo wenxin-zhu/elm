@@ -28,4 +28,9 @@ public class OrdersController {
 	public List<Orders> listOrdersByUserId(Orders orders) throws Exception {
 		return ordersService.listOrdersByUserId(orders.getUserId());
 	}
+	
+	@RequestMapping("/payOrders")
+	public int payOrders(Integer orderId,Integer usedScore) throws Exception {
+		return ordersService.payOrders(orderId,usedScore);
+	}
 }

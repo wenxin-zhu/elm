@@ -3,6 +3,7 @@ package com.neusoft.elmboot.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -21,6 +22,12 @@ public interface ScoreMapper {
 	@Delete("Delete from score where scoreId = #{scoreId}")
 	public int removeScore(int scoreId);
 	
-	@Update("Update score set leftTime = #{leftTime} where scoreId = #{scoreId}")
+	@Insert("insert into score values(null,#{userId},#{scoreCount},#{createDate},#{leftTime})")
+	public int insertScore(Score score);
+	
+	@Select("select * from score where createDate=#{createDate} and userId=#{userId}")
+	public Score isTheSameDay(Score score);
+	
+	@Update("update score set scoreCount=#{scoreCount},leftTime=#{leftTime} where createDate=#{createDate} and userId=#{userId}")
 	public int updateScore(Score score);
 }

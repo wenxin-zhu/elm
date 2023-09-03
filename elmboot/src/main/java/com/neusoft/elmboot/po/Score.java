@@ -1,16 +1,15 @@
 package com.neusoft.elmboot.po;
 
 public class Score {
-	
-	private int scoreId;
+	private Integer scoreId;
 	private String userId;
-	private int scoreCount;
+	private Integer scoreCount;
 	private String createDate;
-	private int leftTime;
-	public int getScoreId() {
+	private Integer leftTime;
+	public Integer getScoreId() {
 		return scoreId;
 	}
-	public void setScoreId(int scoreId) {
+	public void setScoreId(Integer scoreId) {
 		this.scoreId = scoreId;
 	}
 	public String getUserId() {
@@ -19,10 +18,10 @@ public class Score {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public int getScoreCount() {
+	public Integer getScoreCount() {
 		return scoreCount;
 	}
-	public void setScoreCount(int scoreCount) {
+	public void setScoreCount(Integer scoreCount) {
 		this.scoreCount = scoreCount;
 	}
 	public String getCreateDate() {
@@ -31,11 +30,12 @@ public class Score {
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
-	public int getLeftTime() {
+	public Integer getLeftTime() {
 		return leftTime;
 	}
-	public void setLeftTime(int leftTime) {
+	public void setLeftTime(Integer leftTime) {
 		this.leftTime = leftTime;
 	}
+	
 	
 }
