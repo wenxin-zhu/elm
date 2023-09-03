@@ -9,5 +9,4 @@ public class ElmbootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ElmbootApplication.class, args);
 	}
-
 }

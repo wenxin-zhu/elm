@@ -25,6 +25,6 @@ public interface DeliveryAddressMapper {
 			+ "address=#{address} where daId=#{daId}" )
 	public int updateDeliveryAddress(DeliveryAddress deliveryAddress);
 	
-	@Delete("delete from where daId=#{daId}")
+	@Delete("delete from deliveryAddress where daId=#{daId}")
 	public int removeDeliveryAddress(Integer daId);
 }
