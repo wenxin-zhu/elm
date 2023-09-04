@@ -2,7 +2,6 @@ package com.neusoft.elmboot.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +33,6 @@ public class ScoreServiceImpl implements ScoreService {
 	@Override
 	public int updateAndRemoveScore(String userId) {
 		List<Score> list = scoreMapper.listScoreDetial(userId);
-		List<Score> reList = new ArrayList<Score>();
 		// 创建SimpleDateFormat对象,写日期模式
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < list.size(); i++) {

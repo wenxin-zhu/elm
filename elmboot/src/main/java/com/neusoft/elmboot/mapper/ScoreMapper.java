@@ -26,7 +26,7 @@ public interface ScoreMapper {
 	public int insertScore(Score score);
 	
 	@Select("select * from score where createDate=#{createDate} and userId=#{userId}")
-	public Score isTheSameDay(Score score);
+	public Score getScoreByUserIdByCreateDate(Score score);
 	
 	@Update("update score set scoreCount=#{scoreCount},leftTime=#{leftTime} where createDate=#{createDate} and userId=#{userId}")
 	public int updateScore(Score score);

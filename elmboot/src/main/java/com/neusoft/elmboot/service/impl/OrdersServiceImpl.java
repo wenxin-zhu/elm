@@ -73,10 +73,25 @@ public class OrdersServiceImpl implements OrdersService{
 	
 	@Override
 	public int payOrders(Integer orderId,Integer usedScore) {
-		//1.从订单表中更新支付状态
+		// 1.从订单表中更新支付状态
 		int a = ordersMapper.updateOrderState(orderId);
 		int b = 0;
-		//2.向积分表插入一条积分记录
+		// 积分过期更新
+		// scoreService.updateAndRemoveScore(getOrdersById(orderId).getUserId());
+		// 2.删除用掉的积分
+		String userId = getOrdersById(orderId).getUserId();
+		List<Score> list = scoreMapper.listScoreDetial(userId);
+		for(int i = 0; i < list.size() && usedScore > 0; i++) {
+			if (usedScore >= list.get(i).getScoreCount()) {
+				usedScore -= list.get(i).getScoreCount();
+				scoreMapper.removeScore(list.get(i).getScoreId());
+			} else {
+				list.get(i).setScoreCount(list.get(i).getScoreCount() - usedScore);
+				usedScore = 0;
+				scoreMapper.updateScore(list.get(i));
+			}
+		}
+		// 3.向积分表插入一条积分记录
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Orders orders = new Orders();
 		orders = ordersMapper.getOrdersById(orderId);
@@ -86,11 +101,10 @@ public class OrdersServiceImpl implements OrdersService{
 		try {
 			score.setCreateDate(sdf.format(sdf.parse(CommonUtil.getCurrentDate())));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		score.setLeftTime(30);
-		Score score2 = scoreMapper.isTheSameDay(score);
+		Score score2 = scoreMapper.getScoreByUserIdByCreateDate(score);
 		if(score2==null) {
 			b = scoreMapper.insertScore(score);
 		}else {

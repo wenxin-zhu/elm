@@ -37,5 +37,4 @@ public class Score {
 		this.leftTime = leftTime;
 	}
 	
-	
 }
