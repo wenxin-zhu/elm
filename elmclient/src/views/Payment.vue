@@ -38,7 +38,7 @@
 				<img src="../assets/wechat.png">
 			</li>
 		</ul>
-		<div class="payment-button">
+		<div class="payment-button" @click="toConfirmPayment">
 			<button>确认支付</button>
 		</div>
 
@@ -70,9 +70,12 @@
 			const route = useRoute();
 			const router = useRouter();
 			const orderId = ref(null);
+			const usedScore = ref(null);
 			const orders = ref(null);
 			const isShowDetailet = ref(false);
+			const userId = ref();
 
+			//发送请求并传递orderId，获取订单
 			const getOrdersById = () => {
 				axios
 					.post('OrdersController/getOrdersById', qs.stringify({
@@ -87,15 +90,33 @@
 					});
 			};
 
+			//修改ref变量的值为相反数，控制元素或组件的隐藏和显示
 			const detailetShow = () => {
 				isShowDetailet.value = !isShowDetailet.value;
 			}
+			
+			//路由导航到ConfirmPayment页面，并传递参数
+			const toConfirmPayment = () => {
+				console.log(userId.value);
+				router.push({
+					path: '/confirmPayment',
+					query: {
+						orderId: orderId.value,
+						usedScore: usedScore.value,
+						userId: userId.value
+					}
+				});
+			};		
 
 			onMounted(() => {
 				orderId.value = route.query.orderId;
+				usedScore.value = route.query.usedScore;
+				userId.value = route.query.userId;
 				getOrdersById();
+				//console.log(userId.value);
 			});
 
+			//组件即将卸载时解除监听
 			onBeforeUnmount(() => {
 				window.onpopstate = null;
 			});
@@ -109,11 +130,13 @@
 			};
 
 			return {
+				usedScore,
 				orderId,
 				orders,
 				isShowDetailet,
 				getOrdersById,
-				detailetShow
+				detailetShow,
+				toConfirmPayment
 			}
 		}
 

@@ -4,7 +4,7 @@
 	</div>
 </template>
 
-<!-- 这里是共通样式，适用于所有组件，所以不要加scoped -->
+<!-- 这里是共通样式，适用于所有组件，所以不加scoped -->
 <style>
 	html,
 	body,
