@@ -1,11 +1,11 @@
 package com.neusoft.elmboot.po;
 
 public class Score {
-	private Integer scoreId;
-	private String userId;
-	private Integer scoreCount;
-	private String createDate;
-	private Integer leftTime;
+	private Integer scoreId; // 积分编号
+	private String userId; // 用户编号
+	private Integer scoreCount; // 积分数量
+	private String createDate; // 创建时间
+	private Integer leftTime; // 剩余过期时间
 	public Integer getScoreId() {
 		return scoreId;
 	}

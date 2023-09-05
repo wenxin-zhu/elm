@@ -18,25 +18,31 @@ public class ScoreServiceImpl implements ScoreService {
 	@Autowired
 	private ScoreMapper scoreMapper;
 
+	// 根据用户编号获取总积分数
 	@Override
 	public int getTotalScore(String userId) {
 		updateAndRemoveScore(userId);
-		return scoreMapper.getTotalScore(userId);
+		int totalScore = 0;
+		List<Integer> list = scoreMapper.getTotalScore(userId);
+		for (int i = 0; i < list.size(); i++) {
+			totalScore += list.get(i);
+		}
+		return totalScore;
 	}
 	
+	// 根据用户编号获取积分明细
 	@Override
 	public List<Score> listScoreDetial(String userId) {
 		updateAndRemoveScore(userId);
 		return scoreMapper.listScoreDetial(userId);
 	}
 	
+	// 更新积分的过期时间，删除过期的积分记录
 	@Override
 	public int updateAndRemoveScore(String userId) {
 		List<Score> list = scoreMapper.listScoreDetial(userId);
-		// 创建SimpleDateFormat对象,写日期模式
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < list.size(); i++) {
-        	
 	        Date createDate = new Date();
 	        // 获取今天的日期对象
 	        Date todayDate = new Date();
@@ -47,12 +53,9 @@ public class ScoreServiceImpl implements ScoreService {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-	        
 	        // 将两个日期转成毫秒值,Date类的方法getTime
 	        long createSecond = createDate.getTime();
 	        long todaySecond = todayDate.getTime();
-//	        System.out.println(createSecond);
-//	        System.out.println(todaySecond);
 	        int leftTime = 29 - (int)((todaySecond - createSecond) / (24 * 60 * 60 * 1000));
 	        if (leftTime > 0) {
 	        	list.get(i).setLeftTime(leftTime);

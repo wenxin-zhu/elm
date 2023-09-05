@@ -13,6 +13,7 @@ public class FoodServiceImpl implements FoodService {
 	@Autowired
 	private FoodMapper foodMapper;
 
+	// 根据商家编号查询所属食品信息
 	@Override
 	public List<Food> listFoodByBusinessId(Integer businessId) {
 		return foodMapper.listFoodByBusinessId(businessId);

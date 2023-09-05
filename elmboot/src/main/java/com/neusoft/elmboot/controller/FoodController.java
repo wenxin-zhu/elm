@@ -14,6 +14,7 @@ public class FoodController {
 	@Autowired
 	private FoodService foodService;
 
+	// 根据商家编号查询所属食品信息
 	@RequestMapping("/listFoodByBusinessId")
 	public List<Food> listFoodByBusinessId(Food food) throws Exception {
 		return foodService.listFoodByBusinessId(food.getBusinessId());

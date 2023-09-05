@@ -13,11 +13,13 @@ public class BusinessServiceImpl implements BusinessService {
 	@Autowired
 	private BusinessMapper businessMapper;
 
+	// 根据点餐分类编号查询所属商家信息
 	@Override
 	public List<Business> listBusinessByOrderTypeId(Integer orderTypeId) {
 		return businessMapper.listBusinessByOrderTypeId(orderTypeId);
 	}
 
+	// 根据商家编号查询商家信息
 	@Override
 	public Business getBusinessById(Integer businessId) {
 		return businessMapper.getBusinessById(businessId);

@@ -7,13 +7,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig {
+	// 处理跨域请求
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:8081")
+						.allowedOrigins("http://localhost:8081") // 允许的跨域ip和端口号
 						.allowCredentials(true)
 						.allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
 						.allowedHeaders("*").maxAge(36000);
