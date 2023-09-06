@@ -35,6 +35,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.python</groupId>
+		    <artifactId>jython-standalone</artifactId>
+		    <version>2.7.0</version>	
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,5 +57,7 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<packaging>jar</packaging>
 
 </project>
