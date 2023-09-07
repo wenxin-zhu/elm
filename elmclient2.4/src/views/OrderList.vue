@@ -33,9 +33,9 @@
 			</template>
 		</ul>
 		<h3>已支付订单信息：</h3>
-		<ul class="order" v-if="orderArr.length > 0">
+		<ul class="orderr" v-if="orderArr.length > 0">
 			<template v-for="item in orderArr">
-				<li v-for="item in orderArr" v-if="item &&item.orderState==1">
+				<li v-if="item &&item.orderState==1">
 					<div class="order-info">
 						<p>
 							{{item.business.businessName}}
@@ -64,52 +64,6 @@
 </template>
 
 <script>
-	/*import { ref, onMounted } from 'vue';
-	import Footer from '../components/Footer.vue';
-	import axios from 'axios';
-	import qs from 'qs';
-	export default {
-	  name: 'OrderList',
-	  components: {
-	    Footer,
-	  },
-	  setup() {
-	    const orderArr = ref([]);
-	    const user = ref({});
-	
-	    onMounted(async () => {
-	      user.value = JSON.parse(sessionStorage.getItem('user'));
-	
-	      try {
-	        const response = axios.post(
-	          'OrdersController/listOrdersByUserId',
-	          qs.stringify({
-	            userId: user.value.userId,
-	          })
-	        );
-	
-	        let result = response.data;
-	        for (let orders of result) {
-	          orders.isShowDetailet = false;
-	        }
-	        orderArr.value = result;
-	        console.log(orderArr.value);
-	      } catch (error) {
-	        console.error(error);
-	      }
-	    });
-	
-	    const detailetShow = (orders) => {
-	      orders.isShowDetailet = !orders.isShowDetailet;
-	    };
-	
-	    return {
-	      orderArr,
-	      user,
-	      detailetShow,
-	    };
-	  }
-	};*/
 	import {
 		ref,
 		onMounted
@@ -129,6 +83,7 @@
 			const orderArr = ref([]);
 			const user = ref(getSessionStorage('user'));
 			const isDataLoaded = ref(false);
+			//发送post请求并传递参数userId，返回订单数组
 			onMounted(() => {
 				axios
 					.post('/OrdersController/listOrdersByUserId', qs.stringify({
@@ -141,16 +96,18 @@
 						}
 						orderArr.value = response.data;
 						isDataLoaded.value = true;
-						console.log(11);
-						console.log(orderArr.value);
+						/*console.log(11);
+						console.log(orderArr.value);*/
 					})
 					.catch(error => {
 						console.error(error);
 						console.log(1);
 					});
+				/*console.log(user.value.userId);
+				console.log(orderArr.value);*/
 			});
-
-			const detailetShow = async (orders) => {
+			////切换ref变量isShowDetailet的值，控制页面上元素或组件的显示及隐藏
+			const detailetShow = (orders) => {
 				orders.isShowDetailet = !orders.isShowDetailet;
 			};
 
@@ -168,6 +125,7 @@
 	.wrapper {
 		width: 100%;
 		height: 100%;
+
 	}
 
 	/****************** header部分 ******************/
@@ -200,6 +158,7 @@
 
 	.wrapper .order {
 		width: 100%;
+
 	}
 
 	.wrapper .order li {
@@ -243,6 +202,38 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	.wrapper .orderr {
+		width: 100%;
+		padding: 0 0 14vw 0;
+	}
+
+	.wrapper .orderr li {
+		width: 100%;
+	}
+
+	.wrapper .orderr li .order-info {
+		box-sizing: border-box;
+		padding: 2vw 4vw;
+		font-size: 4vw;
+		color: #666;
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.wrapper .orderr li .order-info .order-info-right {
+		display: flex;
+	}
+
+	.wrapper .orderr li .order-info .order-info-right .order-info-right-icon {
+		background-color: #f90;
+		color: #fff;
+		border-radius: 3px;
+		user-select: none;
+		cursor: pointer;
 	}
 
 	/****************** 底部菜单部分 ******************/

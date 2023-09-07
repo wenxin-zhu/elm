@@ -31,8 +31,8 @@
 	import {
 		ref,
 		onMounted,
-		computed, 
-		reactive 
+		computed,
+		reactive
 	} from 'vue';
 	import {
 		useRoute,
@@ -41,7 +41,11 @@
 	import axios from 'axios';
 	import qs from 'qs';
 	import Footer from '../components/Footer.vue';
-	import { setLocalStorage,getLocalStorage,removeLocalStorage } from '../common.js';
+	import {
+		setLocalStorage,
+		getLocalStorage,
+		removeLocalStorage
+	} from '../common.js';
 
 	export default {
 		name: 'UserAddress',
@@ -84,10 +88,19 @@
 			};
 
 			const setDeliveryAddress = (deliveryAddress) => {
-					//把用户选择的默认送货地址存储到localStorage中
-					setLocalStorage(user.value.userId, deliveryAddress);
-					router.push({path: '/orders', query: {businessId: businessId.value }});
-		    };
+				//把用户选择的默认送货地址存储到localStorage中
+				setLocalStorage(user.value.userId, deliveryAddress);
+				if(sessionStorage.getItem('redirectPath') === '/index'){
+					router.push({path: '/index'});
+				}else{
+					router.push({
+						path: '/orders',
+						query: {
+							businessId: businessId.value
+						}
+					});
+				}
+			};
 
 			const toAddUserAddress = () => {
 				businessId.value = route.query.businessId;
@@ -132,8 +145,8 @@
 						console.error(error);
 					});
 			};
-			
-			return{
+
+			return {
 				user,
 				businessId,
 				deliveryAddressArr,

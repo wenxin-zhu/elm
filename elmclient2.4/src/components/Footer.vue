@@ -4,15 +4,15 @@
 			<i class="fa fa-home"></i>
 			<p>首页</p>
 		</li>
-		<li>
-			<i class="fa fa-compass"></i>
-			<p>发现</p>
+		<li @click="toMyScore">
+			<i class="fa fa-compass" ></i>
+			<p>积分</p>
 		</li>
 		<li @click="toOrderList">
 			<i class="fa fa-file-text-o"></i>
 			<p>订单</p>
 		</li>
-		<li>
+		<li @click="toMyInfo">
 			<i class="fa fa-user-o"></i>
 			<p>我的</p>
 		</li>
@@ -21,21 +21,38 @@
 
 <script>
 	import { useRouter } from 'vue-router';
+	import {ref} from 'vue';
+	import {getSessionStorage} from '../common.js';
 	export default {
 	  name: 'Footer',
+	  
 	  setup() {
-		const router = useRouter();
+		const router = useRouter(); 
+		const user = ref(getSessionStorage('user'));
+		const userId =ref(null);
+		
 		const toOrderList = () => {
+		  sessionStorage.setItem('redirectPath', '/orderList');
 		  router.push({ path: '/orderList'});
 		};
 		const toIndex = () => {
 		  router.push({ path: '/index'});
 		};
+		const toMyScore = () => {
+		sessionStorage.setItem('redirectPath','/myScore');
+		router.push({ path: '/myScore'});
+		};
+		const toMyInfo = () => {
+			  router.push({ path: '/myInfo'});
+		};
 		return {
 		  toOrderList,
-		  toIndex
+		  toIndex,
+		  toMyScore,
+		  toMyInfo
 		};
 	  }
+	 
 	}
 </script>
 

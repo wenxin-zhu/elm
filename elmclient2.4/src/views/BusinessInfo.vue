@@ -99,7 +99,7 @@
 			const user = ref(null);
 			const cartArr = ref([]);
 			const deliveryPrice = ref(0);
-
+			//向服务器请求商家信息，将响应数据存储在business中
 			const fetchBusinessInfo = () => {
 				axios
 					.post('BusinessController/getBusinessById', qs.stringify({
@@ -112,7 +112,7 @@
 						console.error(error);
 					});
 			};
-
+			//向服务器请求食品信息，将响应数据存储在foodArr中
 			const fetchFoodInfo = () => {
 				axios
 					.post('FoodController/listFoodByBusinessId', qs.stringify({
@@ -137,7 +137,7 @@
 				const storedUser = sessionStorage.getItem('user');
 				user.value = storedUser ? JSON.parse(storedUser) : null;
 			};
-
+			//增加购物车中某食品数量
 			const add = (index) => {
 				if (user.value === null) {
 					router.push({
@@ -151,7 +151,7 @@
 					updateCart(index, 1);
 				}
 			};
-
+			//减少购物车中某食品数量或将其从购物车删除
 			const minus = (index) => {
 				if (user.value === null) {
 					router.push({
@@ -165,6 +165,7 @@
 					removeCart(index);
 				}
 			};
+			//列出购物车中的食品及数量，将购物车中的食品数量与食品列表匹配
 			const listCart = () => {
 				axios
 					.post('CartController/listCart', qs.stringify({
@@ -189,6 +190,7 @@
 						console.error(error);
 					});
 			};
+			//将食品添加到购物车
 			const saveCart = (index) => {
 				axios
 					.post('CartController/saveCart', qs.stringify({
@@ -205,15 +207,15 @@
 						} else {
 							alert('向购物车中添加食品失败');
 						}
-						console.log('saveadd');
-						console.log(response.data);
-						console.log('saveadd');
+						//console.log('saveadd');
+						//console.log(response.data);
+						//console.log('saveadd');
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
-
+			//更新购物车中的食品数量，+1或-1
 			const updateCart = (index, num) => {
 				axios
 					.post('CartController/updateCart', qs.stringify({
@@ -232,15 +234,15 @@
 							alert('向购物车中更新食品失败!');
 							console.log(response.data);
 						}
-						console.log('update');
+						/*console.log('update');
 						console.log(response.data);
-						console.log('update');
+						console.log('update');*/
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
-
+			//从购物车中删除食品
 			const removeCart = (index) => {
 				axios
 					.post('CartController/removeCart', qs.stringify({
@@ -257,14 +259,15 @@
 						} else {
 							alert('向购物车中删除食品失败!');
 						}
-						console.log('remove');
+						/*console.log('remove');
 						console.log(response.data);
-						console.log('remove');
+						console.log('remove');*/
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
+			//计算购物车中的食品总价格，返回计算结果
 			const totalPrice = computed(() => {
 				let total = 0;
 				for (let item of foodArr.value) {
@@ -272,6 +275,7 @@
 				}
 				return total;
 			});
+			//计算购物车中的食品总数量，返回计算结果
 			const totalQuantity = computed(() => {
 				let quantity = 0;
 				for (let item of foodArr.value) {
@@ -279,10 +283,11 @@
 				}
 				return quantity;
 			});
+			//计算购物车中食品总价格与配送费相加后的总价格，返回计算结果
 			const totalSettle = computed(() => {
 				return totalPrice.value + deliveryPrice.value;
 			});
-
+			//跳转到订单页面，并传递参数businessId
 			const toOrder = () => {
 				router.push({
 					path: '/orders',
@@ -291,6 +296,7 @@
 					}
 				});
 			};
+			//监视路由查询businessId的变化并及时修改businessId、调用函数
 			watch(
 				() => route.query.businessId,
 				(newBusinessId) => {
@@ -303,26 +309,12 @@
 				}
 				// 立即执行回调函数，以便初始化 businessId
 			);
-
+			//组件被挂载到DOM后如果用户已登录，立即列出购物车中的食品及数量
 			onMounted(() => {
 				if (user.value !== null) {
 					listCart(0);
 				}
 			});
-			/*onMounted(() => {
-	      watch(
-	        () => route.query.businessId,
-	        (newBusinessId) => {
-	          businessId.value = newBusinessId;
-	          fetchBusinessInfo();
-	          fetchFoodInfo();
-	          getSessionStorage();
-	        },
-	        { immediate: true }
-	// 立即执行回调函数，以便初始化 businessId
-	      );
-	    });*/
-
 			return {
 				businessId,
 				business,
@@ -337,173 +329,6 @@
 			};
 		}
 	};
-
-	/*import {
-		ref,
-		onMounted,
-		watch
-	} from 'vue';
-	//import VueLocalStorage from 'vue-web-storage';
-	import {useRoute} from 'vue-router';
-	import axios from 'axios';
-	import qs from 'qs';
-	import router from '../router/index.js';
-
-	export default {
-		name: 'BusinessInfo',
-		setup() {
-			const route = useRoute(); // 获取当前路由信息
-			const businessId = ref(null);
-			const business = ref({});
-			const foodArr = ref([]);
-			const user = ref(null);
-			//const user = this.$sessionStorage.getItem('user');
-
-			const fetchBusinessInfo = () => {
-				axios.post('BusinessController/getBusinessById', qs.stringify({
-						businessId: businessId.value
-					}))
-					.then(response => {
-						business.value = response.data;
-					})
-					.catch(error => {
-						console.error(error);
-					});
-			};
-
-			const fetchFoodInfo = () => {
-				axios.post('FoodController/listFoodByBusinessId', qs.stringify({
-						businessId: businessId.value
-					}))
-					.then(response => {
-						foodArr.value = response.data;
-						for (let i = 0; i < foodArr.value.length; i++) {
-							foodArr.value[i].quantity = 0;
-						}
-					})
-					.catch(error => {
-						console.error(error);
-					});
-			};
-
-        // 从 sessionStorage 中获取用户信息
-            const getSessionStorage = () => {
-              const storedUser = sessionStorage.getItem('user');
-              user.value = storedUser ? JSON.parse(storedUser) : null;
-            };    
-			onMounted(() => {
-				watch(
-					() => route.query.businessId,
-					(newBusinessId) => {
-						businessId.value = newBusinessId;
-						fetchBusinessInfo(); // 在 businessId 更新后执行操作
-						fetchFoodInfo(); // 在 businessId 更新后执行操作
-						getSessionStorage();///////////////////
-					}, {
-						immediate: true
-					} // 立即执行回调函数，以便初始化 businessId
-				);
-			});
-
-			return {
-				businessId,
-				business,
-				foodArr,
-				user
-			};
-		},
-		methods: {
-			add(index){
-				//首先做登录验证
-				if (user.value == null) {
-					router.push({path: '/login'});
-				    return;
-				}
-				//console.log('向购物车表中添加一条记录');
-				if(foodArr[index].quantity == 0){
-					//insert
-					savaCart(index);
-				}else{
-					//update
-					updateCart(index, 1);
-				}
-			},
-			minus(index){
-				//首先做登录验证
-				if (user.value == null) {
-					router.push({path: '/login'});
-				    return;
-				}
-				if(foodArr[index].quantity > 1){
-					//update
-					updateCart(index,-1);
-				}else{
-					//delete
-					removeCart(index);
-				}
-			},
-			savaCart(index){
-				axios.post('CartController/saveCart', qs.stringify({
-						businessId: businessId.value,
-						useId:user.value.useId,
-						foodId:foodArr[index].foodId
-				}))
-					.then(response => {
-						if(response.data == 1){
-							//此食品数量更新为1；
-							foodArr[index].quantity = 1;
-							this.foodArr.sort();
-						}else{
-							alert('向购物车中添加食品失败');
-						}
-					})
-					.catch(error => {
-						console.error(error);
-					});
-			},
-			updateCart(index,num){
-				axios.post('CartController/saveCart', qs.stringify({
-						businessId: businessId.value,
-						useId:user.value.useId,
-						foodId:foodArr[index].foodId,
-						quantity: foodArr[index].quantity + num
-				}))
-					.then(response => {
-						if(response.data == 1){
-							//此食品数量更新为1；
-							foodArr[index].quantity = 1;
-							this.foodArr.sort();
-						}else{
-							alert('向购物车中添加食品失败!');
-						}
-					})
-					.catch(error => {
-						console.error(error);
-					});
-			},
-			removeCart(index){
-				axios.post('CartController/saveCart', qs.stringify({
-						businessId: businessId.value,
-						useId:user.value.useId,
-						foodId:foodArr[index].foodId,
-						quantity: foodArr[index].quantity + num
-				}))
-					.then(response => {
-						if(response.data == 1){
-							//此食品数量更新为1；
-							foodArr[index].quantity = 0;
-							foodArr.sort();
-						}else{
-							alert('向购物车中删除食品失败!');
-						}
-					})
-					.catch(error => {
-						console.error(error);
-					});
-			}
-			
-		}
-	}*/
 </script>
 
 <style scoped>

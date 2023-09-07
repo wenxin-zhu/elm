@@ -2,15 +2,16 @@
 	<!-- 总容器 -->
 	<div class="wrapper">
 		<!-- header part -->
-		<header>
+		<header @click="toUserAddress">
 			<div class="icon-location-box">
 				<div class="icon-location"></div>
 			</div> <!--定位图标-->
-			<div class="location-text">沈阳市规划大厦<i class="fa fa-caret-down"></i></div>
+			<div class="location-text">{{deliveryaddress!=null?deliveryaddress.address:'定位失败'}}<i
+					class="fa fa-caret-down"></i></div>
 		</header>
 		<!-- search部分 -->
 		<div class="search">
-			<div class="search-fixed-top" ref="fixedBox">
+			<div class="search-fixed-top"  ref="fixedBox" :style="styles">
 				<div class="search-box">
 					<i class="fa fa-search"></i>搜索饿了么商家、商品名称
 				</div>
@@ -70,11 +71,11 @@
 		<div class="supermenber">
 			<div class="left">
 				<img src="../assets/super_member.png">
-				<h3>超级会员</h3>
-				<p>&#8226; 每月享超值权益</p>
+				<h3>新功能：AI</h3>
+				<p>&#8226; 解锁你的私人AI助手</p>
 			</div>
-			<div class="right">
-				立即开通 &gt;
+			<div class="right" @click="toAI">
+				点击使用 &gt;
 			</div>
 		</div>
 		<!--推荐商家部分-->
@@ -364,24 +365,7 @@
 		</ul>
 		<!--底部菜单部分-->
 		<Footer></Footer>
-		<!--<ul class="footer">
-			<li onclick="location.href='index.html'">
-				<i class="fa fa-home"></i>
-				<p>首页</p>
-			</li>
-			<li onclick="location.href='businessInfo.html'">
-				<i class="fa fa-compass"></i>
-				<p>发现</p>
-			</li>
-			<li onclick="location.href='orderList.html'">
-				<i class="fa fa-file-text-o"></i>
-				<p>订单</p>
-			</li>
-			<li>
-				<i class="fa fa-user-o"></i>
-				<p>我的</p>
-			</li>
-		</ul>-->
+
 	</div>
 </template>
 
@@ -390,12 +374,17 @@
 	import {
 		onMounted,
 		onBeforeUnmount,
-		ref
+		ref,
+		reactive
 	} from 'vue';
 	import {
 		useRouter
 	} from 'vue-router';
-
+	import {
+		setLocalStorage,
+		getLocalStorage,
+		getSessionStorage
+	} from '../common.js';
 	export default {
 		name: 'Index',
 		components: {
@@ -404,27 +393,42 @@
 		setup() {
 			const router = useRouter();
 			const fixedBox = ref(null);
-
+			const deliveryaddress = ref(null);
+			const styles = reactive({
+			    position: 'static',
+			    left: 'unset',
+			    top: 'unset'
+			  });
 			onMounted(() => {
+				whereIm();
 				const handleScroll = () => {
-					// 获取滚动条位置
+					/*let s1 = document.documentElement.scrollTop;
+					let s2 = document.body.scrollTop;
+					let scroll = s1 === 0 ? s2 : s1;
+						
+
+					let width = document.documentElement.clientWidth;*/
 					let s1 = document.documentElement.scrollTop;
 					let s2 = document.body.scrollTop;
 					let scroll = s1 === 0 ? s2 : s1;
-
-					// 获取视口宽度
-					let width = document.documentElement.clientWidth;
+					const width = window.innerWidth || document.documentElement.clientWidth || document.body
+						.clientWidth;
 
 					// 获取顶部固定块
-					let search = fixedBox.value;
+					//let search = fixedBox.value.parentNode;
+					let search = fixedBox.value.value;
 
 					// 判断滚动条超过视口宽度的12%，搜索块变成固定定位
 					if (scroll > width * 0.12) {
-						search.style.position = 'fixed';
+						styles.position = 'fixed';
+						    styles.left = '0';
+						    styles.top = '0';
+						/*search.style.position = 'fixed';
 						search.style.left = '0';
-						search.style.top = '0';
+						search.style.top = '0';*/
 					} else {
-						search.style.position = 'static';
+						 styles.position = 'static';
+						//search.style.position = 'static';
 					}
 				};
 
@@ -434,7 +438,21 @@
 					document.removeEventListener('scroll', handleScroll);
 				});
 			});
+			//地址显示
+			const whereIm = () => {
+				const user = ref(getSessionStorage('user'));
+				if (user.value) {
+					deliveryaddress.value = getLocalStorage(user.value?.userId);
+				}
+			}
+			//设置地址跳转
+			const toUserAddress = () => {
+				sessionStorage.setItem('redirectPath', '/index');
+				router.push({
+					path: '/userAddress'
+				});
 
+			}
 			const toBusinessList = (orderTypeId) => {
 				router.push({
 					path: '/businessList',
@@ -443,10 +461,18 @@
 					}
 				});
 			};
-
+			const toAI = () => {
+				router.push({
+					path: '/myAI'
+				});
+			};
 			return {
 				fixedBox,
+				whereIm,
 				toBusinessList,
+				toUserAddress,
+				deliveryaddress,
+				toAI,styles
 			};
 		},
 	};
@@ -466,7 +492,9 @@
 		background-color: #0097FF;
 
 		display: flex;
+		justify-content: flex-start;
 		align-items: center;
+
 	}
 
 	.wrapper header .icon-location-box {
@@ -475,6 +503,32 @@
 		margin: 0 1vw 0 3vw;
 		/*上顺时针*/
 	}
+
+
+	.wrapper header .icon-location-box .icon-location {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		/*正方形*/
+		border-radius: 50% 50% 50% 0;
+		/*切三个圆角*/
+		background: #fff;
+		transform: rotate(-45deg);
+	}
+
+
+	.wrapper header .icon-location-box .icon-location:after {
+		content: '';
+		width: 40%;
+		height: 40%;
+		margin: 30% 0 0 29%;
+		background-color: #0097FF;
+		position: absolute;
+		border-radius: 50%;
+	}
+
+
+
 
 	.wrapper header .location-text {
 		font-size: 4.5vw;
@@ -490,6 +544,7 @@
 	.wrapper .search {
 		width: 100%;
 		height: 13vw;
+		margin-top: 12vw;
 	}
 
 	.wrapper .search .search-fixed-top {

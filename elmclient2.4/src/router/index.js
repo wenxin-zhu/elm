@@ -11,6 +11,11 @@ import UserAddress from '../views/UserAddress.vue'
 import AddUserAddress from '../views/AddUserAddress.vue'
 import EditUserAddress from '../views/EditUserAddress.vue'
 import Payment from '../views/Payment.vue'
+import ConfirmPayment from '../views/ConfirmPayment.vue'
+import MyScore from '../views/MyScore.vue'
+import MyAI from '../views/MyAI.vue'
+import Conversation from '../views/Conversation.vue'
+import MyInfo from '../views/MyInfo.vue'
 const routes = [{
 	path: '/',
 	name: 'Home',
@@ -59,6 +64,26 @@ const routes = [{
 	path: '/payment',
 	name: 'Payment',
 	component: Payment
+}, {
+	path: '/confirmPayment',
+	name: 'ConfirmPayment',
+	component: ConfirmPayment
+}, {
+	path: '/myScore',
+	name: 'MyScore',
+	component: MyScore
+}, {
+	path: '/myAI',
+	name: 'MyAI',
+	component: MyAI
+}, {
+	path: '/conversation',
+	name: 'Conversation',
+	component: Conversation
+}, {
+	path: '/myInfo',
+	name: 'MyInfo',
+	component: MyInfo
 }]
 
 const router = createRouter({  // 使用 createRouter 而不是 Router

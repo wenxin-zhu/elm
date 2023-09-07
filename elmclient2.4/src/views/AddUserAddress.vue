@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<!-- header部分 -->
 		<header>
-			<p>编辑送货地址</p>
+			<p>新增送货地址</p>
 		</header>
 		<!-- 表单部分 -->
 		<ul class="form-box">
@@ -20,8 +20,7 @@
 					性别：
 				</div>
 				<div class="content" style="font-size: 3vw;">
-					<input type="radio" v-model="deliveryAddress.contactSex" value="1" style="width:6vw;height:3.2vw;"
-						checked>男
+					<input type="radio" v-model="deliveryAddress.contactSex" value="1" style="width:6vw;height:3.2vw;">男
 					<input type="radio" v-model="deliveryAddress.contactSex" value="0" style="width:6vw;height:3.2vw;">女
 				</div>
 			</li>
@@ -43,7 +42,7 @@
 			</li>
 		</ul>
 		<div class="button-add">
-			<button @click="editUserAddress">更新</button>
+			<button @click="addUserAddress">保存</button>
 		</div>
 		<!-- 底部菜单部分 -->
 		<Footer></Footer>
@@ -55,43 +54,37 @@
 		onMounted
 	} from 'vue';
 	import {
-		useRouter,
-		useRoute
+		useRouter
 	} from 'vue-router';
 	import qs from 'qs';
 	import axios from 'axios';
 	import Footer from '../components/Footer.vue';
+
 	export default {
-		name: 'EditUserAddress',
+		name: 'AddUserAddress',
 		components: {
 			Footer
 		},
 		setup() {
 			const businessId = ref(null);
 			const user = ref({});
-			const daId = ref(null);
-			const deliveryAddress = ref({});
-			const route = useRoute();
-			const router = useRouter();
+			const deliveryAddress = ref({
+				contactName: '',
+				contactSex: 1,
+				contactTel: '',
+				address: ''
+			});
 
+			const router = useRouter();
+			//从当前路由获取businessId的值，将会话存储中的用户数据解析并存储在user中
 			onMounted(() => {
-				businessId.value = route.query.businessId;
-				daId.value = route.query.daId;
+				businessId.value = router.currentRoute.value.query.businessId;
 				//user.value = getSessionStorage('user');
 				const storedUser = sessionStorage.getItem('user');
 				user.value = storedUser ? JSON.parse(storedUser) : null;
-				axios
-					.post('DeliveryAddressController/getDeliveryAddressById', qs.stringify({
-						daId: daId.value
-					})).then(response => {
-						deliveryAddress.value = response.data;
-					})
-					.catch(error => {
-						console.error(error);
-					});
 			});
-
-			const editUserAddress = () => {
+			//添加用户地址，注意用户填写联系人姓名、电话、地址为空时要return
+			const addUserAddress = () => {
 				if (deliveryAddress.value.contactName === '') {
 					alert('联系人姓名不能为空！');
 					return;
@@ -106,9 +99,8 @@
 				}
 				deliveryAddress.value.userId = user.value.userId;
 				axios
-					.post('DeliveryAddressController/updateDeliveryAddress', qs.stringify(
-						deliveryAddress.value
-					)).then(response => {
+					.post('DeliveryAddressController/saveDeliveryAddress', qs.stringify(deliveryAddress.value))
+					.then(response => {
 						if (response.data > 0) {
 							router.push({
 								path: '/userAddress',
@@ -117,7 +109,7 @@
 								}
 							});
 						} else {
-							alert('更新地址失败！');
+							alert('新增地址失败！');
 						}
 					})
 					.catch(error => {
@@ -128,40 +120,34 @@
 			return {
 				businessId,
 				user,
-				daId,
 				deliveryAddress,
-				editUserAddress
+				addUserAddress
 			};
 		}
 	};
 	/*import Footer from '../components/Footer.vue';
 	export default {
-		name: 'EditUserAddress',
+		name: 'AddUserAddress',
 		data() {
 			return {
 				businessId: this.$route.query.businessId,
-				daId: this.$route.query.daId,
 				user: {},
-				deliveryAddress: {}
+				deliveryAddress: {
+					contactName: '',
+					contactSex: 1,
+					contactTel: '',
+					address: ''
+				}
 			}
 		},
 		created() {
 			this.user = this.$getSessionStorage('user');
-
-			this.$axios.post('DeliveryAddressController/getDeliveryAddressById',
-				this.$qs.stringify({
-					daId: this.daId
-				})).then(response => {
-				this.deliveryAddress = response.data;
-			}).catch(error => {
-				console.error(error);
-			});
 		},
 		components: {
 			Footer
 		},
 		methods: {
-			editUserAddress() {
+			addUserAddress() {
 				if (this.deliveryAddress.contactName == '') {
 					alert('联系人姓名不能为空！');
 					return;
@@ -174,7 +160,8 @@
 					alert('联系人地址不能为空！');
 					return;
 				}
-				this.$axios.post('DeliveryAddressController/updateDeliveryAddress',
+				this.deliveryAddress.userId = this.user.userId;
+				this.$axios.post('DeliveryAddressController/saveDeliveryAddress',
 					this.$qs.stringify(
 						this.deliveryAddress
 					)).then(response => {
@@ -186,7 +173,7 @@
 							}
 						});
 					} else {
-						alert('更新地址失败！');
+						alert('新增地址失败！');
 					}
 				}).catch(error => {
 					console.error(error);
@@ -229,6 +216,7 @@
 		box-sizing: border-box;
 		padding: 4vw 3vw 0vw 3vw;
 		display: flex;
+
 	}
 
 	.wrapper .form-box li .title {
@@ -236,7 +224,6 @@
 		font-size: 3vw;
 		font-weight: 700;
 		color: #666;
-
 	}
 
 	.wrapper .form-box li .content {

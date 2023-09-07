@@ -44,17 +44,12 @@
 		components: {
 			Footer,
 		},
-		/* methods:{
-		    toBusinessInfo(businessId){
-			        router.push({path:'/businessInfo',query:{businessId:businessId}});
-		    }
-		 },*/
 		setup() {
 			const orderTypeId = ref(null);
 			const businessArr = ref([]);
 			const route = useRoute();
 			const user = ref(null);
-
+			//获取当前路由的查询参数orderTypeId
 			onMounted(() => {
 				const routeQuery = route.query;
 				orderTypeId.value = parseInt(routeQuery.orderTypeId);
@@ -62,6 +57,7 @@
 				fetchData();
 
 			});
+			//根据点击的分类,列举分类里的所有商家
 			const fetchData = async () => {
 				//console.log(orderTypeId.value);
 				user.value = JSON.parse(sessionStorage.getItem('user')) || null;
@@ -72,19 +68,10 @@
 							orderTypeId: orderTypeId.value
 						}
 					});
-					/*const response = await axios.post('BusinessController/listBusinessByOrderTypeId', {
-		    orderTypeId: orderTypeId.value
-		  });
-	       /*const response = await axios.post('BusinessController/listBusinessByOrderTypeId', /*{
-	         orderTypeId: orderTypeId.value,
-	       }*/
-					/*orderTypeId.value);*/
 					businessArr.value = response.data;
 					if (user.value && user.value.userId != null) {
 						listCart();
 					}
-
-
 				} catch (error) {
 					console.error(error);
 					console.log(error.message);
@@ -92,6 +79,7 @@
 					//console.log(orderTypeId.value);
 				}
 			};
+			//路由导航到businessInfo界面
 			const toBusinessInfo = (businessId) => {
 				router.push({
 					path: '/businessInfo',
@@ -100,6 +88,7 @@
 					}
 				});
 			};
+			//列出购物车中的食品及数量
 			const listCart = () => {
 				axios
 					.post('CartController/listCart', qs.stringify({
@@ -122,29 +111,12 @@
 						console.error(error);
 					});
 			};
-			/* onMounted(() => {
-	   fetchData();
-	 });
-    /*const fetchData = async () => {
-      try {
-        const response = await axios.post('BusinessController/listBusinessByOrderTypeId', {
-          orderTypeId: orderTypeId.value,
-        });
-        businessArr.value = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    };*/
-
-
 			return {
 				orderTypeId,
 				businessArr,
 				toBusinessInfo
 			};
 		},
-
-
 	};
 </script>
 
