@@ -14,7 +14,8 @@ public class WebMvcConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://172.18.182.229:8081") // 允许的跨域ip和端口号
+//						.allowedOrigins("http://62.234.21.39:8081") // 允许的跨域ip和端口号
+						.allowedOrigins("*") // 允许的跨域ip和端口号
 						.allowCredentials(true)
 						.allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
 						.allowedHeaders("*").maxAge(36000);

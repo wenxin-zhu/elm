@@ -50,7 +50,7 @@ public class OrdersServiceImpl implements OrdersService {
 		int orderId = orders.getOrderId();
 
 		// 3、批量添加订单明细
-		List<OrderDetailet> list = new ArrayList<>();
+		List<OrderDetailet> list = new ArrayList<OrderDetailet>();
 		for (Cart c : cartList) {
 			OrderDetailet od = new OrderDetailet();
 			od.setOrderId(orderId);
