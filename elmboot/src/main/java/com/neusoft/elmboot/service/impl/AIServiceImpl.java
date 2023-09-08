@@ -32,7 +32,7 @@ public class AIServiceImpl implements AIService {
 			BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "UTF-8"));
 			String line = null;
 			while ((line = in.readLine()) != null) {
-				System.out.println(line);
+//				System.out.println(line);
 				list.add(line);
 			}
 			in.close();

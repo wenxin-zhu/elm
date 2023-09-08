@@ -1,6 +1,8 @@
 package com.neusoft.elmboot.controller;
 
 import java.util.List;
+
+import com.neusoft.elmboot.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,12 +31,15 @@ public class DeliveryAddressController {
 	// 向送货地址表中添加一条记录
 	@RequestMapping("/saveDeliveryAddress")
 	public int saveDeliveryAddress(DeliveryAddress deliveryAddress) throws Exception {
-		return deliveryAddressService.saveDeliveryAddress(deliveryAddress);
+		int a =deliveryAddressService.saveDeliveryAddress(deliveryAddress);
+		System.out.println(CommonUtil.getCurrentDate() +" 用户("+deliveryAddress.getUserId()+") 创建地址 "+deliveryAddress.getAddress());
+		return a;
 	}
 
 	// 根据送货地址编号更新送货地址信息
 	@RequestMapping("/updateDeliveryAddress")
 	public int updateDeliveryAddress(DeliveryAddress deliveryAddress) throws Exception {
+		System.out.println(CommonUtil.getCurrentDate()+" 用户("+deliveryAddress.getUserId()+") 修改地址 "+deliveryAddress.getAddress()+"("+deliveryAddress.getDaId()+")");
 		return deliveryAddressService.updateDeliveryAddress(deliveryAddress);
 	}
 

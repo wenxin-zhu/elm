@@ -1,6 +1,9 @@
 package com.neusoft.elmboot.controller;
 
 import java.util.List;
+
+import com.neusoft.elmboot.po.User;
+import com.neusoft.elmboot.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +23,9 @@ public class OrdersController {
 	// 然后根据用户编号、商家编号删除购物车表中的数据。
 	@RequestMapping("/createOrders")
 	public int createOrders(Orders orders) throws Exception {
-		return ordersService.createOrders(orders);
+		int a = ordersService.createOrders(orders);
+		System.out.println(CommonUtil.getCurrentDate()+" 用户("+orders.getUserId()+") 创建订单 编号："+orders.getOrderId()+"  金额："+orders.getOrderTotal());
+		return a;
 	}
 
 	// 根据订单编号查询订单信息，包括所属商家信息，和此订单的所有订单明细信息
@@ -38,6 +43,9 @@ public class OrdersController {
 	// 支付订单，并扣除和新增相应数量的积分
 	@RequestMapping("/payOrders")
 	public int payOrders(Integer orderId,Integer usedScore) throws Exception {
+		Orders orders=new Orders();
+		orders = ordersService.getOrdersById(orderId);
+		System.out.println(CommonUtil.getCurrentDate()+" 用户("+orders.getUserId()+") 支付订单 编号："+orders.getOrderId()+"  金额："+orders.getOrderTotal() +" 使用积分: " +usedScore);
 		return ordersService.payOrders(orderId,usedScore);
 	}
 }
