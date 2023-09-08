@@ -19,6 +19,7 @@
 				</div>
 			</li>
 		</ul>
+
 		<!--底部菜单部分-->
 		<Footer></Footer>
 	</div>
@@ -41,22 +42,21 @@
 	export default {
 		name: 'BusinessList',
 		components: {
-			Footer
+			Footer,
 		},
-		
 		setup() {
 			const orderTypeId = ref(null);
 			const businessArr = ref([]);
 			const route = useRoute();
 			const user = ref(null);
-
 			//获取当前路由的查询参数orderTypeId
 			onMounted(() => {
 				const routeQuery = route.query;
 				orderTypeId.value = parseInt(routeQuery.orderTypeId);
+				//user.value = JSON.parse(localStorage.getItem('user'));
 				fetchData();
+
 			});
-			
 			//根据点击的分类,列举分类里的所有商家
 			const fetchData = async () => {
 				//console.log(orderTypeId.value);
@@ -79,7 +79,6 @@
 					//console.log(orderTypeId.value);
 				}
 			};
-			
 			//路由导航到businessInfo界面
 			const toBusinessInfo = (businessId) => {
 				router.push({
@@ -89,7 +88,6 @@
 					}
 				});
 			};
-			
 			//列出购物车中的食品及数量
 			const listCart = () => {
 				axios
@@ -113,13 +111,12 @@
 						console.error(error);
 					});
 			};
-			
 			return {
 				orderTypeId,
 				businessArr,
 				toBusinessInfo
 			};
-		}
+		},
 	};
 </script>
 

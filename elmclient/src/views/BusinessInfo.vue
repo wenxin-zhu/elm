@@ -4,16 +4,19 @@
 		<header>
 			<p>商家信息</p>
 		</header>
+
 		<!-- 商家logo部分 -->
 		<div class="business-logo">
 			<img :src="business.businessImg">
 		</div>
+
 		<!-- 商家信息部分 -->
 		<div class="business-info">
 			<h1>{{business.businessName}}</h1>
 			<p>&#165;{{business.starPrice}}起送 &#165;{{business.deliveryPrice}}配送</p>
 			<p>{{business.businessExplain}}</p>
 		</div>
+
 		<!-- 食品列表部分"" -->
 		<ul class="food">
 			<li v-for="(item,index) in foodArr">
@@ -36,6 +39,7 @@
 				</div>
 			</li>
 		</ul>
+
 		<!-- 购物车部分 -->
 		<div class="cart">
 			<div class="cart-left"><!-- 分成左右两块 -->
@@ -43,7 +47,6 @@
 					:style="totalQuantity==0?'background-color:#505051;':'background-color:#3190E8;'">
 					<i class="fa fa-shopping-cart"></i>
 					<div class="cart-left-icon-quantity" v-show="totalQuantity!=0">{{totalQuantity}}</div>
-					<!--当totalQuantity非0时显示购物车中食品总数量-->
 				</div>
 				<div class="cart-left-info">
 					<p>&#165;{{totalPrice}}</p>
@@ -51,7 +54,14 @@
 				</div>
 			</div>
 
-			<div class="cart-right"> <!--使用v-show分两种情况显示，不够起送费和达到起送费-->
+			<div class="cart-right">
+				<!-- 不够起送费 -->
+				<!--
+				        <div class="cart-right-item">
+				            &#165;15起送
+				        </div>
+				        -->
+				<!-- 达到起送费 -->
 				<div class="cart-right-item" v-show="totalSettle<business.starPrice"
 					style="background-color: #535356;cursor: default;">
 					&#165;{{business.starPrice}}起送
@@ -77,9 +87,6 @@
 	} from 'vue-router';
 	import axios from 'axios';
 	import qs from 'qs';
-	import {
-		getSessionStorage
-	} from '../common.js';
 
 	export default {
 		name: 'BusinessInfo',
@@ -89,10 +96,9 @@
 			const businessId = ref(null);
 			const business = ref({});
 			const foodArr = ref([]);
-			const user = ref(getSessionStorage('user'));
+			const user = ref(null);
 			const cartArr = ref([]);
 			const deliveryPrice = ref(0);
-
 			//向服务器请求商家信息，将响应数据存储在business中
 			const fetchBusinessInfo = () => {
 				axios
@@ -106,7 +112,6 @@
 						console.error(error);
 					});
 			};
-
 			//向服务器请求食品信息，将响应数据存储在foodArr中
 			const fetchFoodInfo = () => {
 				axios
@@ -119,7 +124,6 @@
 						for (let i = 0; i < foodArr.value.length; i++) {
 							foodArr.value[i].quantity = 0;
 						}
-						//如果用户已登录，调用listCart()列出购物车内容
 						if (user.value != null) {
 							listCart();
 						}
@@ -129,48 +133,45 @@
 					});
 			};
 
+			const getSessionStorage = () => {
+				const storedUser = sessionStorage.getItem('user');
+				user.value = storedUser ? JSON.parse(storedUser) : null;
+			};
 			//增加购物车中某食品数量
 			const add = (index) => {
-				//用户未登录，重定向到登录页面
 				if (user.value === null) {
 					router.push({
 						path: '/login'
 					});
 					return;
 				}
-				//食品数量为0，调用saveCart（）将食品添加至购物车
 				if (foodArr.value[index].quantity === 0) {
 					saveCart(index);
-					//否则食品数量加1
 				} else {
 					updateCart(index, 1);
 				}
 			};
-
 			//减少购物车中某食品数量或将其从购物车删除
 			const minus = (index) => {
-				//用户未登录，重定向到登录页面
 				if (user.value === null) {
 					router.push({
 						path: '/login'
 					});
 					return;
 				}
-				//食品数量大于1，食品数量减1
 				if (foodArr.value[index].quantity > 1) {
 					updateCart(index, -1);
-					//否则调用removeCart函数将食品从购物车中删除
 				} else {
 					removeCart(index);
 				}
 			};
-
 			//列出购物车中的食品及数量，将购物车中的食品数量与食品列表匹配
 			const listCart = () => {
 				axios
 					.post('CartController/listCart', qs.stringify({
 						businessId: businessId.value,
 						userId: user.value.userId,
+						//foodId: foodArr.value[index].foodId
 					}))
 					.then(response => {
 						cartArr.value = response.data;
@@ -183,14 +184,12 @@
 								}
 							}
 						}
-						//确保vue监听到了它的变化
-						foodArr.value.sort();
+						foodArr.value.sort(); //确保vue监听到了它的变化
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
-
 			//将食品添加到购物车
 			const saveCart = (index) => {
 				axios
@@ -200,7 +199,6 @@
 						foodId: foodArr.value[index].foodId
 					}))
 					.then(response => {
-						//如果成功添加到购物车，则更新相应食品的quantity
 						if (response.data === 1) {
 							foodArr.value[index].quantity = 1;
 							const arr = [...foodArr.value]; // 将响应式变量转换为数组
@@ -209,12 +207,14 @@
 						} else {
 							alert('向购物车中添加食品失败');
 						}
+						//console.log('saveadd');
+						//console.log(response.data);
+						//console.log('saveadd');
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
-
 			//更新购物车中的食品数量，+1或-1
 			const updateCart = (index, num) => {
 				axios
@@ -234,12 +234,14 @@
 							alert('向购物车中更新食品失败!');
 							console.log(response.data);
 						}
+						/*console.log('update');
+						console.log(response.data);
+						console.log('update');*/
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
-
 			//从购物车中删除食品
 			const removeCart = (index) => {
 				axios
@@ -257,12 +259,14 @@
 						} else {
 							alert('向购物车中删除食品失败!');
 						}
+						/*console.log('remove');
+						console.log(response.data);
+						console.log('remove');*/
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			};
-
 			//计算购物车中的食品总价格，返回计算结果
 			const totalPrice = computed(() => {
 				let total = 0;
@@ -271,7 +275,6 @@
 				}
 				return total;
 			});
-
 			//计算购物车中的食品总数量，返回计算结果
 			const totalQuantity = computed(() => {
 				let quantity = 0;
@@ -280,12 +283,10 @@
 				}
 				return quantity;
 			});
-
 			//计算购物车中食品总价格与配送费相加后的总价格，返回计算结果
 			const totalSettle = computed(() => {
 				return totalPrice.value + deliveryPrice.value;
 			});
-
 			//跳转到订单页面，并传递参数businessId
 			const toOrder = () => {
 				router.push({
@@ -295,7 +296,6 @@
 					}
 				});
 			};
-
 			//监视路由查询businessId的变化并及时修改businessId、调用函数
 			watch(
 				() => route.query.businessId,
@@ -303,19 +303,18 @@
 					businessId.value = newBusinessId;
 					fetchBusinessInfo();
 					fetchFoodInfo();
+					getSessionStorage();
 				}, {
 					immediate: true
 				}
-				//立即执行回调函数，以便初始化businessId
+				// 立即执行回调函数，以便初始化 businessId
 			);
-
 			//组件被挂载到DOM后如果用户已登录，立即列出购物车中的食品及数量
 			onMounted(() => {
 				if (user.value !== null) {
 					listCart(0);
 				}
 			});
-
 			return {
 				businessId,
 				business,
@@ -373,7 +372,7 @@
 		width: 40vw;
 		height: 30vw;
 		border-radius: 5px;
-		/*设置圆角*/
+		/*圆角图片*/
 	}
 
 	/****************** 商家信息部分 ******************/
@@ -486,15 +485,18 @@
 	}
 
 	.wrapper .cart .cart-left .cart-left-icon {
-		/*购物车图标设置边框*/
+		/*购物车图标，需要有边框*/
 		width: 16vw;
 		height: 16vw;
 		box-sizing: border-box;
+		/*设置为边框盒子*/
 		border: solid 1.6vw #444;
+		/*灰色边框*/
 		border-radius: 8vw;
 		/*圆角*/
 		background-color: #3190E8;
 		font-size: 7vw;
+		/*购物车图标大小及颜色*/
 		color: #fff;
 
 		display: flex;
@@ -518,11 +520,13 @@
 
 		display: flex;
 		justify-content: center;
+		/*圆点内数字居中*/
 		align-items: center;
 
 		position: absolute;
-		/*靠右上方绝对定位*/
+		/*绝对定位*/
 		right: -1.5vw;
+		/*靠右上方*/
 		top: -1.5vw;
 	}
 
@@ -543,6 +547,8 @@
 		/*2：1*/
 	}
 
+	/*达到起送费时的样式*/
+
 	.wrapper .cart .cart-right .cart-right-item {
 		width: 100%;
 		height: 100%;
@@ -557,4 +563,22 @@
 		justify-content: center;
 		align-items: center;
 	}
+
+	/*不够起送费时的样式（只有背景色和鼠标样式（不可点）的区别）*/
+	/*
+	.wrapper .cart .cart-right .cart-right-item{
+	    width: 100%;
+	    height: 100%;
+	    background-color: #535356;
+	    color: #fff;
+		
+	    font-size: 4.5vw;
+		font-weight: 700;
+		user-select: none;
+		
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	*/
 </style>

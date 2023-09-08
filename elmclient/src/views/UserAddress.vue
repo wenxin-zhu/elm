@@ -31,8 +31,8 @@
 	import {
 		ref,
 		onMounted,
-		computed, 
-		reactive 
+		computed,
+		reactive
 	} from 'vue';
 	import {
 		useRoute,
@@ -41,7 +41,11 @@
 	import axios from 'axios';
 	import qs from 'qs';
 	import Footer from '../components/Footer.vue';
-	import { setLocalStorage,getLocalStorage,removeLocalStorage } from '../common.js';
+	import {
+		setLocalStorage,
+		getLocalStorage,
+		removeLocalStorage
+	} from '../common.js';
 
 	export default {
 		name: 'UserAddress',
@@ -55,19 +59,21 @@
 			const route = useRoute();
 			const router = useRouter();
 
+
+			//businessId.value = route.query.businessId;
+			// 获取会话存储中的用户数据
+			//user.value = JSON.parse(sessionStorage.getItem('user'));
+
 			onMounted(async () => {
-				// 获取会话存储中的用户数据
 				user.value = JSON.parse(sessionStorage.getItem('user'));
 				businessId.value = route.query.businessId;
 				listDeliveryAddressByUserId();
 			});
 
-			//利用三目运算符，将0或1转换为先生/女士
 			const sexFilter = (value) => {
 				return value == 1 ? '先生' : '女士';
 			};
 
-			//发送post请求并传递userId，获取该用户的送货地址数组
 			const listDeliveryAddressByUserId = () => {
 				axios
 					.post('DeliveryAddressController/listDeliveryAddressByUserId', qs.stringify({
@@ -81,14 +87,21 @@
 					});
 			};
 
-			//存储用户选择的地址，跳转到orders页面
 			const setDeliveryAddress = (deliveryAddress) => {
-					//把用户选择的默认送货地址存储到localStorage中
-					setLocalStorage(user.value.userId, deliveryAddress);
-					router.push({path: '/orders', query: {businessId: businessId.value }});
-		    };
+				//把用户选择的默认送货地址存储到localStorage中
+				setLocalStorage(user.value.userId, deliveryAddress);
+				if(sessionStorage.getItem('redirectPath') === '/index'){
+					router.push({path: '/index'});
+				}else{
+					router.push({
+						path: '/orders',
+						query: {
+							businessId: businessId.value
+						}
+					});
+				}
+			};
 
-			//路由导航到AddUserAddress页面，去添加用户地址
 			const toAddUserAddress = () => {
 				businessId.value = route.query.businessId;
 				router.push({
@@ -99,7 +112,6 @@
 				});
 			};
 
-			//路由导航到EditUserAddress页面，去编辑用户地址
 			const editUserAddress = (daId) => {
 				router.push({
 					path: '/editUserAddress',
@@ -110,7 +122,6 @@
 				});
 			};
 
-			//路由导航到RemoveUserAddress页面，去删除用户地址
 			const removeUserAddress = (daId) => {
 				if (!confirm('确认要删除此送货地址吗？')) {
 					return;
@@ -122,7 +133,6 @@
 					.then(response => {
 						if (response.data > 0) {
 							let deliveryAddress = getLocalStorage(user.value.userId);
-							//删除地址同时删除其本地存储
 							if (deliveryAddress != null && deliveryAddress.daId == daId) {
 								removeLocalStorage(user.value.userId);
 							}
@@ -135,8 +145,8 @@
 						console.error(error);
 					});
 			};
-			
-			return{
+
+			return {
 				user,
 				businessId,
 				deliveryAddressArr,

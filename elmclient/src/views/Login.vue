@@ -1,9 +1,11 @@
 <template>
 	<div class="wrapper">
+
 		<!--header部分-->
 		<header>
 			<p>用户登录</p>
 		</header>
+
 		<!--登陆表单部分-->
 		<ul class="form-box">
 			<li>
@@ -23,15 +25,18 @@
 				</div>
 			</li>
 		</ul>
+
 		<div class="button-login">
 			<button @click="login">登录</button>
 		</div>
+
 		<div class="button-register">
 			<button @click="register">去注册</button>
 		</div>
 		<!-- 底部菜单部分 -->
 		<Footer></Footer>
 	</div>
+
 </template>
 
 <script>
@@ -54,17 +59,17 @@
 			const router = useRouter();
 			const userId = ref('');
 			const password = ref('');
-
 			//登录，注意手机号码和密码不能为空，并且向后端传递输入的userId和password，检验是否正确
 			const login = () => {
-				if (userId.value =='') {
+				if (userId.value == '') {
 					alert('手机号码不能为空！');
 					return;
 				}
-				if (password.value =='') {
+				if (password.value == '') {
 					alert('密码不能为空！');
 					return;
 				}
+
 				// 登录请求
 				axios.post('UserController/getUserByIdByPass', qs.stringify({
 					userId: userId.value,
@@ -79,19 +84,21 @@
 
 						// 设置用户信息到 sessionStorage
 						sessionStorage.setItem('user', JSON.stringify(user));
-						 if (sessionStorage.getItem('redirectPath') === '/orderList' || sessionStorage.getItem('redirectPath') === '/myScore') {
-						      console.log(sessionStorage.getItem('redirectPath'));
-							  router.push({ path: sessionStorage.getItem('redirectPath') });
-						    } else {
-						      router.go(-1); // 页面回退
-						    }
+						if (sessionStorage.getItem('redirectPath') === '/orderList' || sessionStorage.getItem(
+								'redirectPath') === '/myScore') {
+							console.log(sessionStorage.getItem('redirectPath'));
+							router.push({
+								path: sessionStorage.getItem('redirectPath')
+							});
+						} else {
+							router.go(-1); // 页面回退
+						}
 						//router.go(-1); // 页面回退
 					}
 				}).catch(error => {
 					console.error(error);
 				});
 			};
-			
 			//路由导航到register页面
 			const register = () => {
 				router.push({
@@ -144,6 +151,7 @@
 		box-sizing: border-box;
 		padding: 4vw 3vw 0 3vw;
 		/*上 右 下 左*/
+
 		display: flex;
 		align-items: center;
 	}

@@ -11,7 +11,8 @@
 					联系人：
 				</div>
 				<div class="content">
-					<input type="text" v-model="deliveryAddress.contactName" placeholder="联系人姓名">
+					<input type="text" v-model="deliveryAddress.contactName" placeholder="联系人
+姓名">
 				</div>
 			</li>
 			<li>
@@ -67,7 +68,6 @@
 		setup() {
 			const businessId = ref(null);
 			const user = ref({});
-			const router = useRouter();
 			const deliveryAddress = ref({
 				contactName: '',
 				contactSex: 1,
@@ -75,15 +75,15 @@
 				address: ''
 			});
 
-            //从当前路由获取businessId的值，将会话存储中的用户数据解析并存储在user中
+			const router = useRouter();
+			//从当前路由获取businessId的值，将会话存储中的用户数据解析并存储在user中
 			onMounted(() => {
 				businessId.value = router.currentRoute.value.query.businessId;
 				//user.value = getSessionStorage('user');
 				const storedUser = sessionStorage.getItem('user');
 				user.value = storedUser ? JSON.parse(storedUser) : null;
 			});
-
-            //添加用户地址，注意用户填写联系人姓名、电话、地址为空时要return
+			//添加用户地址，注意用户填写联系人姓名、电话、地址为空时要return
 			const addUserAddress = () => {
 				if (deliveryAddress.value.contactName === '') {
 					alert('联系人姓名不能为空！');
@@ -101,7 +101,6 @@
 				axios
 					.post('DeliveryAddressController/saveDeliveryAddress', qs.stringify(deliveryAddress.value))
 					.then(response => {
-						//如果添加地址成功，则导航到userAddress页面，并传递businessId参数
 						if (response.data > 0) {
 							router.push({
 								path: '/userAddress',
@@ -126,8 +125,63 @@
 			};
 		}
 	};
+	/*import Footer from '../components/Footer.vue';
+	export default {
+		name: 'AddUserAddress',
+		data() {
+			return {
+				businessId: this.$route.query.businessId,
+				user: {},
+				deliveryAddress: {
+					contactName: '',
+					contactSex: 1,
+					contactTel: '',
+					address: ''
+				}
+			}
+		},
+		created() {
+			this.user = this.$getSessionStorage('user');
+		},
+		components: {
+			Footer
+		},
+		methods: {
+			addUserAddress() {
+				if (this.deliveryAddress.contactName == '') {
+					alert('联系人姓名不能为空！');
+					return;
+				}
+				if (this.deliveryAddress.contactTel == '') {
+					alert('联系人电话不能为空！');
+					return;
+				}
+				if (this.deliveryAddress.address == '') {
+					alert('联系人地址不能为空！');
+					return;
+				}
+				this.deliveryAddress.userId = this.user.userId;
+				this.$axios.post('DeliveryAddressController/saveDeliveryAddress',
+					this.$qs.stringify(
+						this.deliveryAddress
+					)).then(response => {
+					if (response.data > 0) {
+						this.$router.push({
+							path: '/userAddress',
+							query: {
+								businessId: this.businessId
+							}
+						});
+					} else {
+						alert('新增地址失败！');
+					}
+				}).catch(error => {
+					console.error(error);
+				});
+			}
+		}
+	}*/
 </script>
-
 <style scoped>
 	/*************** 总容器 ***************/
 	.wrapper {
@@ -152,7 +206,7 @@
 		z-index: 1000;
 	}
 
-	/*************** 表单信息 ***************/
+	/*************** （表单信息） ***************/
 	.wrapper .form-box {
 		width: 100%;
 		margin-top: 12vw;

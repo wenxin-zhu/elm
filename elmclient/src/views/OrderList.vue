@@ -16,7 +16,7 @@
 						</p>
 						<div class="order-info-right">
 							<p>&#165;{{item.orderTotal}}</p>
-							<div class="order-info-right-icon">去支付</div>
+							<div class="order-info-right-icon" @click="toPayment(item)">去支付</div>
 						</div>
 					</div>
 					<ul class="order-detailet" v-show="item.isShowDetailet">
@@ -66,7 +66,10 @@
 <script>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		computed,
+		reactive,
+		watch
 	} from 'vue';
 	import Footer from '../components/Footer.vue';
 	import axios from 'axios';
@@ -74,46 +77,88 @@
 	import {
 		getSessionStorage
 	} from '../common.js';
+	import {
+		useRoute,
+		useRouter
+	} from 'vue-router';
+	import {
+		setLocalStorage,
+		getLocalStorage
+	} from '../common.js';
 	export default {
 		name: 'OrderList',
 		components: {
 			Footer
 		},
-		
 		setup() {
 			const orderArr = ref([]);
 			const user = ref(getSessionStorage('user'));
 			const isDataLoaded = ref(false);
+			const route = useRoute();
+			const router = useRouter();
+			const deliveryaddress = ref(null);
+			// const businessId = ref(null);
 			
+			// 获取会话存储中的用户数据
+			user.value = JSON.parse(sessionStorage.getItem('user'));
+			deliveryaddress.value = getLocalStorage(user.value.userId);
 			//发送post请求并传递参数userId，返回订单数组
 			onMounted(() => {
 				axios
 					.post('/OrdersController/listOrdersByUserId', qs.stringify({
 						userId: user.value.userId
 					})).then(response => {
+
 						let result = response.data;
 						for (let orders of result) {
 							orders.isShowDetailet = false;
 						}
 						orderArr.value = response.data;
 						isDataLoaded.value = true;
+						/*console.log(11);
+						console.log(orderArr.value);*/
 					})
 					.catch(error => {
 						console.error(error);
 						console.log(1);
 					});
+				/*console.log(user.value.userId);
+				console.log(orderArr.value);*/
 			});
-
 			////切换ref变量isShowDetailet的值，控制页面上元素或组件的显示及隐藏
 			const detailetShow = (orders) => {
 				orders.isShowDetailet = !orders.isShowDetailet;
 			};
 
+			//路由导航至Payment页面，进行支付
+			const toPayment = (orders) => {
+				// console.log(orders.orderId);
+				const totalPrice = computed(() => {
+					let total = 0;
+					for (let item of orders.list) {
+						total += item.food.foodPrice * item.quantity;
+					}
+					total += orders.business.deliveryPrice;
+					return total;
+				});
+				const usedScore = Math.round((totalPrice.value-orders.orderTotal)*100);
+				console.log(usedScore);
+				router.push({
+					path: '/payment',
+					query: {
+						orderId: orders.orderId,
+						usedScore: usedScore,
+						userId: orders.userId
+					}
+				});
+			};
+			
 			return {
 				orderArr,
 				user,
 				isDataLoaded,
-				detailetShow
+				detailetShow,
+				toPayment
 			};
 		}
 	};
@@ -123,6 +168,7 @@
 	.wrapper {
 		width: 100%;
 		height: 100%;
+
 	}
 
 	/****************** header部分 ******************/
@@ -155,6 +201,7 @@
 
 	.wrapper .order {
 		width: 100%;
+
 	}
 
 	.wrapper .order li {
@@ -182,6 +229,22 @@
 		border-radius: 3px;
 		user-select: none;
 		cursor: pointer;
+	}
+
+	.wrapper li .order-detailet {
+		width: 100%;
+	}
+
+	.wrapper li .order-detailet li {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 1vw 4vw;
+		color: #666;
+		font-size: 3vw;
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	.wrapper .orderr {
@@ -216,19 +279,5 @@
 		cursor: pointer;
 	}
 
-	.wrapper li .order-detailet {
-		width: 100%;
-	}
-
-	.wrapper li .order-detailet li {
-		width: 100%;
-		box-sizing: border-box;
-		padding: 1vw 4vw;
-		color: #666;
-		font-size: 3vw;
-
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
+	/****************** 底部菜单部分 ******************/
 </style>

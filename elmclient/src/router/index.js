@@ -13,6 +13,9 @@ import AddUserAddress from '../views/AddUserAddress.vue'
 import EditUserAddress from '../views/EditUserAddress.vue'
 import ConfirmPayment from '../views/ConfirmPayment.vue'
 import MyScore from '../views/MyScore.vue'
+import Conversation from '../views/Conversation.vue'
+import MyAI from '../views/MyAI.vue'
+import MyInfo from '../views/MyInfo.vue'
 
 const routes = [{
 	path: '/',
@@ -70,6 +73,18 @@ const routes = [{
 	path: '/myScore',
 	name: 'MyScore',
 	component: MyScore
+}, {
+	path: '/conversation',
+	name: 'Conversation',
+	component: Conversation
+}, {
+	path: '/myAI',
+	name: 'MyAI',
+	component: MyAI
+}, {
+	path: '/myInfo',
+	name: 'MyInfo',
+	component: MyInfo
 }  ]
 
 //创建Vue Router实例，配置路由的历史模式和路由规则

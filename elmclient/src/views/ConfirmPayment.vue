@@ -1,16 +1,20 @@
 <template>
 	<div class="wrapper">
+
 		<!--header部分-->
 		<header>
 			<p>支付成功</p>
 		</header>
+
 		<!--支付成功部分-->
 		<div class="payment-success">
 			<img src="../assets/payment.jpg" alt="支付成功">
 		</div>
+
 		<div class="points" @click="toMyScore">
 			<p>查看积分详情</p>
 		</div>
+
 		<!--底部菜单部分-->
 		<Footer></Footer>
 	</div>
@@ -52,7 +56,6 @@
 					}
 				});
 			};
-
 			//发送请求并传递参数的值用于支付订单，根据响应数据判断是否支付成功
 			const payOrders = () => {
 				axios
@@ -64,6 +67,7 @@
 						const paymentResult = response.data; // 1 表示支付成功，0 表示支付失败
 						if (paymentResult === 1) {
 							console.log('支付成功');
+							// 在这里可以根据需要进行积分的更新操作
 						} else {
 							console.log('支付失败');
 						}
@@ -80,14 +84,13 @@
 					path: '/index'
 				});
 			};
-
 			//从当前路由的查询参数中获取需要的参数，并调用函数支付订单
 			onMounted(() => {
 				orderId.value = route.query.orderId;
 				usedScore.value = route.query.usedScore;
 				userId.value = route.query.userId;
 				payOrders();
-				//console.log(userId.value);
+				console.log(userId.value);
 			});
 
 			return {

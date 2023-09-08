@@ -10,14 +10,14 @@
 		<h3>订单信息：</h3>
 		<div class="order-info" v-if="orders">
 			<p>
-			    {{orders.business.businessName}}
-                <i class="fa fa-caret-down" @click="detailetShow"></i>
+				{{orders.business.businessName}}
+				<i class="fa fa-caret-down" @click="detailetShow"></i>
 			</p>
 			<p>&#165;{{orders.orderTotal}}</p>
 		</div>
 
 		<!--订单明细部分-->
-		<ul class="order-detailet" v-show="isShowDetailet"  v-if="orders">
+		<ul class="order-detailet" v-show="isShowDetailet" v-if="orders">
 			<li v-for="item in orders.list">
 				<p>{{item.food.foodName}} x {{item.quantity}}</p>
 				<p>&#165;{{item.food.foodPrice*item.quantity}}</p>
@@ -74,7 +74,6 @@
 			const orders = ref(null);
 			const isShowDetailet = ref(false);
 			const userId = ref();
-
 			//发送请求并传递orderId，获取订单
 			const getOrdersById = () => {
 				axios
@@ -89,12 +88,10 @@
 						console.error(error);
 					});
 			};
-
 			//修改ref变量的值为相反数，控制元素或组件的隐藏和显示
 			const detailetShow = () => {
 				isShowDetailet.value = !isShowDetailet.value;
 			}
-			
 			//路由导航到ConfirmPayment页面，并传递参数
 			const toConfirmPayment = () => {
 				console.log(userId.value);
@@ -106,16 +103,14 @@
 						userId: userId.value
 					}
 				});
-			};		
-
+			};
 			onMounted(() => {
 				orderId.value = route.query.orderId;
 				usedScore.value = route.query.usedScore;
 				userId.value = route.query.userId;
 				getOrdersById();
-				//console.log(userId.value);
+				console.log(userId.value);
 			});
-
 			//组件即将卸载时解除监听
 			onBeforeUnmount(() => {
 				window.onpopstate = null;

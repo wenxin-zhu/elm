@@ -11,7 +11,8 @@
 					联系人：
 				</div>
 				<div class="content">
-					<input type="text" v-model="deliveryAddress.contactName" placeholder="联系人姓名">
+					<input type="text" v-model="deliveryAddress.contactName" placeholder="联系人
+姓名">
 				</div>
 			</li>
 			<li>
@@ -48,7 +49,6 @@
 		<Footer></Footer>
 	</div>
 </template>
-
 <script>
 	import {
 		ref,
@@ -61,20 +61,14 @@
 	import qs from 'qs';
 	import axios from 'axios';
 	import Footer from '../components/Footer.vue';
-	import {
-		getSessionStorage
-	} from '../common.js';
-	
 	export default {
 		name: 'EditUserAddress',
 		components: {
 			Footer
 		},
-		
 		setup() {
 			const businessId = ref(null);
-			//const user = ref({});
-			const user = ref(getSessionStorage('user'));
+			const user = ref({});
 			const daId = ref(null);
 			const deliveryAddress = ref({});
 			const route = useRoute();
@@ -84,20 +78,19 @@
 				//从当前路由查询参数中赋值给需要的变量
 				businessId.value = route.query.businessId;
 				daId.value = route.query.daId;
-				// const storedUser = sessionStorage.getItem('user');
-				// user.value = storedUser ? JSON.parse(storedUser) : null;
+				//user.value = getSessionStorage('user');
+				const storedUser = sessionStorage.getItem('user');
+				user.value = storedUser ? JSON.parse(storedUser) : null;
 				axios
 					.post('DeliveryAddressController/getDeliveryAddressById', qs.stringify({
 						daId: daId.value
 					})).then(response => {
-						//获取配送地址
 						deliveryAddress.value = response.data;
 					})
 					.catch(error => {
 						console.error(error);
 					});
 			});
-
 			//编辑地址，注意联系人姓名、电话、地址不能为空
 			const editUserAddress = () => {
 				if (deliveryAddress.value.contactName === '') {
@@ -142,6 +135,66 @@
 			};
 		}
 	};
+	/*import Footer from '../components/Footer.vue';
+	export default {
+		name: 'EditUserAddress',
+		data() {
+			return {
+				businessId: this.$route.query.businessId,
+				daId: this.$route.query.daId,
+				user: {},
+				deliveryAddress: {}
+			}
+		},
+		created() {
+			this.user = this.$getSessionStorage('user');
+
+			this.$axios.post('DeliveryAddressController/getDeliveryAddressById',
+				this.$qs.stringify({
+					daId: this.daId
+				})).then(response => {
+				this.deliveryAddress = response.data;
+			}).catch(error => {
+				console.error(error);
+			});
+		},
+		components: {
+			Footer
+		},
+		methods: {
+			editUserAddress() {
+				if (this.deliveryAddress.contactName == '') {
+					alert('联系人姓名不能为空！');
+					return;
+				}
+				if (this.deliveryAddress.contactTel == '') {
+					alert('联系人电话不能为空！');
+					return;
+				}
+				if (this.deliveryAddress.address == '') {
+					alert('联系人地址不能为空！');
+					return;
+				}
+				this.$axios.post('DeliveryAddressController/updateDeliveryAddress',
+					this.$qs.stringify(
+						this.deliveryAddress
+					)).then(response => {
+					if (response.data > 0) {
+						this.$router.push({
+							path: '/userAddress',
+							query: {
+								businessId: this.businessId
+							}
+						});
+					} else {
+						alert('更新地址失败！');
+					}
+				}).catch(error => {
+					console.error(error);
+				});
+			}
+		}
+	}*/
 </script>
 <style scoped>
 	/*************** 总容器 ***************/

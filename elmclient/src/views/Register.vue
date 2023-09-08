@@ -85,7 +85,6 @@
 				userSex: 1
 			});
 			const confirmPassword = ref('');
-			
 			//检查用户账号是否已经注册
 			const checkUserId = () => {
 				axios.post('UserController/getUserById', qs.stringify({
@@ -104,7 +103,6 @@
 
 				});
 			};
-
 			//注册，注意用户名、手机号码及密码不为空，两次密码须一致
 			const register = () => {
 				if (user.userId === '') {
