@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AIServiceImpl implements AIService {
-	
+
 	@Override
 	public List<String> listOptionByAdj(String adj) {
 		Process proc;
@@ -20,7 +20,7 @@ public class AIServiceImpl implements AIService {
 		try {
 			String pythonPath = "gpt/python";
 			String pythonFilePath = "gpt_api.py";
-			String[] args1 = new String[] { pythonPath, pythonFilePath, adj};
+			String[] args1 = new String[] { pythonPath, pythonFilePath, adj };
 			proc = Runtime.getRuntime().exec(args1);
 			/*
 			 * String数组里的那一行很重要 首先一定要设置好你所使用的python的位置，切记不要直接使用python，因为系统会默认使用自带的python，
@@ -44,19 +44,19 @@ public class AIServiceImpl implements AIService {
 		}
 		return list;
 	}
-	
+
 	public List<String> getContinuousAnswer(String question, String conversation_id) {
 		Process proc;
 		List<String> list = new ArrayList();
 		try {
 			String[] args1 = new String[] { "gpt/python",
-					"gpt_api.py", question, conversation_id};
+					"gpt_api.py", question, conversation_id };
 			proc = Runtime.getRuntime().exec(args1);
 			BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "UTF-8"));
 			StringBuffer buf = new StringBuffer();
 			String line = null;
 			while ((line = in.readLine()) != null) {
-//				System.out.println(line);
+				// System.out.println(line);
 				buf.append(line);
 			}
 			String answer = buf.toString();
