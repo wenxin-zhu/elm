@@ -52,7 +52,7 @@ public class AIServiceImpl implements AIService {
 			String[] args1 = new String[] { "gpt/python",
 					"gpt_api.py", question, conversation_id};
 			proc = Runtime.getRuntime().exec(args1);
-			BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "GBK"));
+			BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "UTF-8"));
 			StringBuffer buf = new StringBuffer();
 			String line = null;
 			while ((line = in.readLine()) != null) {
